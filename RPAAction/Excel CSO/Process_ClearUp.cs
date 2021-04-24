@@ -8,7 +8,8 @@ using Microsoft.Office.Interop.Excel;
 namespace RPAAction.Excel_CSO
 {
     /// <summary>
-    /// 进程-处理<see cref="_Application"/>以适应用户操作
+    /// 进程-清理
+    /// 处理<see cref="_Application"/>以适应用户操作
     /// </summary>
     class Process_ClearUp : ExcelAction
     {
