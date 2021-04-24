@@ -1,7 +1,7 @@
 ﻿namespace RPAAction.Excel_CSO
 {
     /// <summary>
-    /// 工作簿-打开
+    /// 进程-打开工作簿
     /// 如果工作簿已经打开则会关闭工作簿(且不会保存)并重新打开
     /// </summary>
     class Process_OpenWorkbook : ExcelAction
