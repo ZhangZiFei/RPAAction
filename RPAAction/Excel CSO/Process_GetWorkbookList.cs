@@ -1,0 +1,37 @@
+﻿using Microsoft.Office.Interop.Excel;
+
+namespace RPAAction.Excel_CSO
+{
+    /// <summary>
+    /// 进程-获取工作簿列表
+    /// </summary>
+    class Process_GetWorkbookList : ExcelAction
+    {
+        public System.Data.DataTable table = null;
+
+        public Process_GetWorkbookList()
+        {
+            Run();
+        }
+
+        protected override void action()
+        {
+            AttachApp();
+            if (app != null)
+            {
+                initTable();
+                foreach (_Workbook wb in app.Workbooks)
+                {
+                    table.Rows.Add(wb.Name, wb.FullName);
+                }
+            }
+        }
+
+        private void initTable()
+        {
+            table = new System.Data.DataTable();
+            table.Columns.Add("Name");
+            table.Columns.Add("FullName");
+        }
+    }
+}
