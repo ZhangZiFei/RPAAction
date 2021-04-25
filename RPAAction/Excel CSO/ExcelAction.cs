@@ -292,7 +292,7 @@ namespace RPAAction.Excel_CSO
         public ExcelAction(string wbPath = null, string wsName = null, string range = null)
             : base()
         {
-            this.wbPath = Path.GetFullPath(wbPath);
+            this.wbPath = wbPath;
             wbFileName = (wbPath == null || wbPath.Equals("")) ? null : Path.GetFileName(wbPath);
             this.wsName = wsName;
         }
@@ -345,7 +345,7 @@ namespace RPAAction.Excel_CSO
         {
             if (CheckString(wbPath))
             {
-                wb = AttachOrOpenWorkbook(wbPath);
+                wb = AttachOrOpenWorkbook(Path.GetFullPath(wbPath));
             }
             else
             {
