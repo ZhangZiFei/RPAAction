@@ -2,6 +2,7 @@
 using RPAAction.Base;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace RPAAction.Excel_CSO
@@ -249,6 +250,32 @@ namespace RPAAction.Excel_CSO
         {
             _Workbook wb = AttachWorkbook(wbPath);
             return wb == null ? OpenWorkbook(wbPath, readOnly, pwd, delimiter, writePwd) : wb;
+        }
+
+        public static XlFileFormat getXlFileFormatByWbPath(string wbPath)
+        {
+            wbPath = Path.GetFullPath(wbPath);
+            string ext = Path.GetExtension(wbPath).ToLower();
+
+            switch (ext)
+            {
+                case ".xlsx":
+                    return XlFileFormat.xlWorkbookDefault;
+                case ".xls":
+                    return XlFileFormat.xlWorkbookNormal;
+                case ".xlsxm":
+                    return XlFileFormat.xlOpenXMLWorkbookMacroEnabled;
+                case ".csv":
+                    return XlFileFormat.xlCSV;
+                case ".html":
+                    return XlFileFormat.xlHtml;
+                case ".txt":
+                    return XlFileFormat.xlUnicodeText;
+                case ".xml":
+                    return XlFileFormat.xlXMLSpreadsheet;
+                default:
+                    return XlFileFormat.xlUnicodeText;
+            }
         }
 
         /// <param name="wbPath">工作簿路径, 如果为空视为获取活动工作簿</param>
