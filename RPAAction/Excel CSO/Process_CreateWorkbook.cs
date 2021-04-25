@@ -11,7 +11,7 @@ namespace RPAAction.Excel_CSO
     {
         public Process_CreateWorkbook(string wbPath)
         {
-            this.wbPath = wbPath;
+            this.wbPath = Path.GetFullPath(wbPath);
             Run();
         }
 
@@ -19,10 +19,6 @@ namespace RPAAction.Excel_CSO
         {
             AttachOrOpenApp();
 
-            if (!CheckString(wbPath))
-            {
-                throw new ActionException("请指定参数\"wbPath\"");
-            }
             if (File.Exists(wbPath))
             {
                 throw new ActionException(string.Format("文件({0})已经存在", wbPath));

@@ -44,7 +44,7 @@ namespace RPAAction.Base
         }
 
         /// <summary>
-        /// Action的实现内容,按照规范,类中所有的不是对字符串或数字类型进行操作的代码均由此函数实现或者调用
+        /// Action的实现内容,按照规范,类中所有的存在副作用的代码均需要在这里实现
         /// </summary>
         abstract protected void action();
 

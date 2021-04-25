@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 
 namespace RPAAction.Excel_CSO
 {
@@ -150,14 +151,14 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         public static _Workbook AttachWorkbook(string wbPath)
         {
-            if (!(CheckString(wbPath) && System.IO.File.Exists(wbPath) && AttachApp() != null))
+            if (!(CheckString(wbPath) && File.Exists(wbPath) && AttachApp() != null))
             {
                 return null;
             }
 
             _Workbook _wb = null;
-            wbPath = System.IO.Path.GetFullPath(wbPath);
-            string wbFileName = System.IO.Path.GetFileName(wbPath);
+            wbPath = Path.GetFullPath(wbPath);
+            string wbFileName = Path.GetFileName(wbPath);
 
             try
             {
@@ -220,6 +221,7 @@ namespace RPAAction.Excel_CSO
         public static _Workbook OpenWorkbook(string wbPath, bool readOnly = false, string pwd = null, string delimiter = null, string writePwd = null)
         {
             AttachOrOpenApp();
+            wbPath = Path.GetFullPath(wbPath);
             _Workbook wb = app.Workbooks.Open(
                 wbPath,
                 XlUpdateLinks.xlUpdateLinksNever,
@@ -283,8 +285,8 @@ namespace RPAAction.Excel_CSO
         public ExcelAction(string wbPath = null, string wsName = null, string range = null)
             : base()
         {
-            this.wbPath = wbPath;
-            wbFileName = (wbPath == null || wbPath.Equals("")) ? null : System.IO.Path.GetFileName(wbPath);
+            this.wbPath = Path.GetFullPath(wbPath);
+            wbFileName = (wbPath == null || wbPath.Equals("")) ? null : Path.GetFileName(wbPath);
             this.wsName = wsName;
         }
 
@@ -345,7 +347,7 @@ namespace RPAAction.Excel_CSO
                 {
                     wb = app.ActiveWorkbook;
                     wbPath = wb.FullName;
-                    wbFileName = CheckString(wbPath) ? null : System.IO.Path.GetFileName(wbPath);
+                    wbFileName = CheckString(wbPath) ? null : Path.GetFileName(wbPath);
                 }
                 else
                 {

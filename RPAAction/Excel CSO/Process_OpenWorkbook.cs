@@ -1,4 +1,6 @@
-﻿namespace RPAAction.Excel_CSO
+﻿using System.IO;
+
+namespace RPAAction.Excel_CSO
 {
     /// <summary>
     /// 进程-打开工作簿
@@ -13,7 +15,7 @@
         /// <param name="writeResPassword">写权限密码,有的工作簿是受到保护,需要密码才能回去写入权限</param>
         public Process_OpenWorkbook(string wbPath, bool readOnly = false, string pwd = null, string delimiter = null, string writePwd = null)
         {
-            this.wbPath = wbPath;
+            this.wbPath = Path.GetFullPath(wbPath);
             this.readOnly = readOnly;
             this.pwd = pwd;
             this.delimiter = delimiter;
