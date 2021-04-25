@@ -254,6 +254,11 @@ namespace RPAAction.Excel_CSO
             return wb == null ? OpenWorkbook(wbPath, readOnly, pwd, delimiter, writePwd) : wb;
         }
 
+        /// <summary>
+        /// 目前支持xlsx,xls,csv,html,txt,xml,dif除此之外默认txt
+        /// </summary>
+        /// <param name="wbPath"></param>
+        /// <returns></returns>
         public static XlFileFormat getXlFileFormatByWbPath(string wbPath)
         {
             wbPath = Path.GetFullPath(wbPath);
@@ -275,6 +280,8 @@ namespace RPAAction.Excel_CSO
                     return XlFileFormat.xlUnicodeText;
                 case ".xml":
                     return XlFileFormat.xlXMLSpreadsheet;
+                case ".dif":
+                    return XlFileFormat.xlDIF;
                 default:
                     return XlFileFormat.xlUnicodeText;
             }
