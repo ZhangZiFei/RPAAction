@@ -84,6 +84,7 @@
     <Compile Include="Excel CSO\Workbook_DeleteWorksheet.cs" />
     <Compile Include="Excel CSO\Workbook_GetWorksheetList.cs" />
     <Compile Include="Excel CSO\Process_OpenWorkbook.cs" />
+    <Compile Include="Excel CSO\Workbook_SaveAs.cs" />
     <Compile Include="Excel CSO\Worksheet_Active.cs" />
     <Compile Include="Oledb CSO\AccessAction.cs" />
     <Compile Include="Oledb CSO\ExcelImportToOledb.cs" />
