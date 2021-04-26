@@ -16,7 +16,6 @@ namespace RPAAction.Excel_CSO
         /// <param name="app"></param>
         public static void KillApp(_Application app)
         {
-            Console.WriteLine(1);
             if (app == null)
             {
                 return;
@@ -27,9 +26,12 @@ namespace RPAAction.Excel_CSO
                 GetWindowThreadProcessId(new IntPtr(app.Hwnd), out processId);
                 app.Quit();
                 Process p = Process.GetProcessById((int)processId);
-                p.WaitForExit(10);
+                if (p.WaitForExit(100))
+                {
+                    return;
+                }
                 p.Kill();
-                System.Threading.Thread.Sleep(100);//等待内存反应Excel进程的关闭
+                p.WaitForExit(10000);
             }
         }
 
