@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Security.Policy;
 
 namespace RPAAction.Excel_CSO
 {
@@ -295,8 +294,9 @@ namespace RPAAction.Excel_CSO
             : base()
         {
             this.wbPath = wbPath;
-            wbFileName = (wbPath == null || wbPath.Equals("")) ? null : Path.GetFileName(wbPath);
+            wbFileName = CheckString(wbPath) ? null : Path.GetFileName(wbPath);
             this.wsName = wsName;
+            this.range = range;
         }
 
         //---------- protected ----------
@@ -317,6 +317,11 @@ namespace RPAAction.Excel_CSO
         protected string wsName = null;
 
         /// <summary>
+        /// 单元格名称
+        /// </summary>
+        protected string range = null;
+
+        /// <summary>
         /// Excel应用,在<see cref="ExcelAction"/>中,任何对不是当前<see cref="app"/>或其子属性的操作都将指向新的<see cref="_Application"/>,
         /// </summary>
         protected static _Application app = null;
@@ -331,23 +336,46 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         protected _Worksheet ws = null;
 
+
+        /// <summary>
+        /// 单元格
+        /// </summary>
+        protected Range R = null;
+
+        /// <summary>
+        /// <see cref="app"/>是否由当前的Action打开
+        /// </summary>
+        protected bool isOpenApp = false;
+
+        /// <summary>
+        /// <see cref="wb"/>是否由当前Action打开
+        /// </summary>
+        protected bool isOpenWorkbook = false;
+
         /// <summary>
         /// 自动连接或者打开Excel,自动获取<see cref="app"/>,<see cref="wb"/>和<see cref="ws"/>
         /// </summary>
         protected override void action()
         {
-            getWorkBook();
-            getSheets();
+            getWorkbook();
+            getSheet();
+            getR();
         }
 
         /// <summary>
         /// 自动设置<see cref="wb"/>
         /// </summary>
-        protected void getWorkBook()
+        protected void getWorkbook()
         {
+            isOpenApp = AttachApp() == null ? true : false;
             if (CheckString(wbPath))
             {
-                wb = AttachOrOpenWorkbook(Path.GetFullPath(wbPath));
+                wb = AttachWorkbook(wbPath);
+                if (wb == null)
+                {
+                    wb = OpenWorkbook(wbPath);
+                    isOpenWorkbook = true;
+                }
             }
             else
             {
@@ -369,7 +397,7 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 自动设置<see cref="ws"/>
         /// </summary>
-        protected void getSheets()
+        protected void getSheet()
         {
             if (CheckString(wsName))
             {
@@ -388,6 +416,25 @@ namespace RPAAction.Excel_CSO
                 wsName = ws.Name;
             }
             ws.Activate();
+        }
+
+        /// <summary>
+        /// 自动设置<see cref="R"/>
+        /// </summary>
+        protected void getR()
+        {
+            if (CheckString(range))
+            {
+                R = app.Range[range];
+            }
+            else
+            {
+                dynamic r = app.Selection;
+                if (r is Range)
+                {
+                    R = r;
+                }
+            }
         }
 
         //---------- private ----------
