@@ -37,12 +37,12 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 工作簿文件名(带后缀)
         /// </summary>
-        public new string wbFileName => wbFileName;
+        public new string wbFileName => base.wbFileName;
 
         /// <summary>
         /// 工作表名称
         /// </summary>
-        public new string wsName => wsName;
+        public new string wsName => base.wsName;
 
         /// <summary>
         /// 单元格名称
