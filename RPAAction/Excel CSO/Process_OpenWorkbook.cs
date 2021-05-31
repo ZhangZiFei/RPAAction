@@ -36,9 +36,9 @@ namespace RPAAction.Excel_CSO
             wb = OpenWorkbook(wbPath, readOnly, pwd, delimiter, writePwd);
         }
 
-        private bool readOnly;
-        private string pwd;
-        private string delimiter;
-        private string writePwd;
+        private readonly bool readOnly;
+        private readonly string pwd;
+        private readonly string delimiter;
+        private readonly string writePwd;
     }
 }

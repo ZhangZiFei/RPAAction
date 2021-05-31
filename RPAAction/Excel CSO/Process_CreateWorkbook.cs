@@ -26,7 +26,7 @@ namespace RPAAction.Excel_CSO
 
             Directory.CreateDirectory(Path.GetDirectoryName(wbPath));
             wb = app.Workbooks.Add();
-            ws.SaveAs(wbPath, getXlFileFormatByWbPath(wbPath));
+            ws.SaveAs(wbPath, GetXlFileFormatByWbPath(wbPath));
         }
     }
 }

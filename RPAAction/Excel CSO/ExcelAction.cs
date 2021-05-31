@@ -21,8 +21,7 @@ namespace RPAAction.Excel_CSO
             }
             else
             {
-                uint processId;
-                GetWindowThreadProcessId(new IntPtr(app.Hwnd), out processId);
+                GetWindowThreadProcessId(new IntPtr(app.Hwnd), out uint processId);
                 app.Quit();
                 Process p = Process.GetProcessById((int)processId);
                 if (p.WaitForExit(100))
@@ -135,7 +134,7 @@ namespace RPAAction.Excel_CSO
         public static _Application AttachOrOpenApp()
         {
             AttachApp();
-            return app == null ? CreateAppForRPA() : app;
+            return app ?? CreateAppForRPA();
         }
 
         /// <summary>
@@ -152,68 +151,25 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         public static _Workbook AttachWorkbook(string wbPath)
         {
-            if (!(CheckString(wbPath) && File.Exists(wbPath) && AttachApp() != null))
-            {
-                return null;
-            }
-
-            _Workbook _wb = null;
+            _Workbook wb = null;
             wbPath = Path.GetFullPath(wbPath);
-            string wbFileName = Path.GetFileName(wbPath);
 
-            try
+            //检测路径和Excel进程
+            if (File.Exists(wbPath) && AttachApp() != null)
             {
-                _wb = app.Workbooks[wbFileName];
-            }
-            catch (Exception) { }
-            if (_wb != null)
-            {
-                if (_wb.FullName == wbPath)
+                wb = IAttachWorkbook1(wbPath);//方案一
+                if (wb == null)
                 {
-                    return _wb;
-                }
-                else
-                {
-                    _wb = null;
+                    wb = IAttachWorkbook2(wbPath);//方案二
                 }
             }
 
-            dynamic wb = null;
-            uint OBJID_NATIVEOM = Convert.ToUInt32("FFFFFFF0", 16);
-            Guid IID_DISPATCH = new Guid("00020400-0000-0000-C000-000000000046");
-            IntPtr XLhwnd = IntPtr.Zero;
-            do
+            if (wb != null)
             {
-                //---------------
-                XLhwnd = FindWindowEx(IntPtr.Zero, XLhwnd, "XLMAIN", null);
-                if (IntPtr.Zero.Equals(XLhwnd))
-                {
-                    throw new Exception(string.Format("沒有找到已經打開的工作簿({0})", wbPath));
-                }
-                IntPtr XLDESKhwnd = FindWindowEx(XLhwnd, IntPtr.Zero, "XLDESK", null);
-                IntPtr WBhwnd = FindWindowEx(XLDESKhwnd, IntPtr.Zero, "EXCEL7", null);
-                AccessibleObjectFromWindow(WBhwnd, OBJID_NATIVEOM, ref IID_DISPATCH, ref wb);
-                //----------------
-                _wb = (Workbook)wb.ActiveCell.Parent.Parent;
-                if (_wb != null)
-                {
-                    if (_wb.FullName != wbPath)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            } while (true);
-
-            if (_wb != null)
-            {
-                ChangeWorkbookForRPA(_wb);
+                ChangeWorkbookForRPA(wb);
             }
 
-            return _wb;
+            return wb;
         }
 
         /// <summary>
@@ -252,7 +208,7 @@ namespace RPAAction.Excel_CSO
         public static _Workbook AttachOrOpenWorkbook(string wbPath, bool readOnly = false, string pwd = null, string delimiter = null, string writePwd = null)
         {
             _Workbook wb = AttachWorkbook(wbPath);
-            return wb == null ? OpenWorkbook(wbPath, readOnly, pwd, delimiter, writePwd) : wb;
+            return wb ?? OpenWorkbook(wbPath, readOnly, pwd, delimiter, writePwd);
         }
 
         /// <summary>
@@ -260,7 +216,7 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         /// <param name="wbPath"></param>
         /// <returns></returns>
-        public static XlFileFormat getXlFileFormatByWbPath(string wbPath)
+        public static XlFileFormat GetXlFileFormatByWbPath(string wbPath)
         {
             wbPath = Path.GetFullPath(wbPath);
             string ext = Path.GetExtension(wbPath).ToLower();
@@ -357,17 +313,17 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         protected override void action()
         {
-            getWorkbook();
-            getSheet();
-            getR();
+            GetWorkbook();
+            GetSheet();
+            GetR();
         }
 
         /// <summary>
         /// 自动设置<see cref="wb"/>
         /// </summary>
-        protected void getWorkbook()
+        protected void GetWorkbook()
         {
-            isOpenApp = AttachApp() == null ? true : false;
+            isOpenApp = AttachApp() == null;
             if (CheckString(wbPath))
             {
                 wb = AttachWorkbook(wbPath);
@@ -397,7 +353,7 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 自动设置<see cref="ws"/>
         /// </summary>
-        protected void getSheet()
+        protected void GetSheet()
         {
             if (CheckString(wsName))
             {
@@ -421,11 +377,19 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 自动设置<see cref="R"/>
         /// </summary>
-        protected void getR()
+        protected void GetR()
         {
             if (CheckString(range))
             {
-                R = app.Range[range];
+                switch (range)
+                {
+                    case "used":
+                        R = ws.UsedRange;
+                        break;
+                    default:
+                        R = app.Range[range];
+                        break;
+                }
             }
             else
             {
@@ -438,6 +402,73 @@ namespace RPAAction.Excel_CSO
         }
 
         //---------- private ----------
+
+        /// <summary>
+        /// Workbook连接方案一
+        /// </summary>
+        /// <returns></returns>
+        private static _Workbook IAttachWorkbook1(string wbPath)
+        {
+            _Workbook wb = null;
+            string wbFileName = Path.GetFileName(wbPath);
+            try
+            {
+                wb = app.Workbooks[wbFileName];
+            }
+            catch (Exception) { }
+            if (wb != null)
+            {
+                if (wb.FullName == wbPath)
+                {
+                    return wb;
+                }
+                else
+                {
+                    wb = null;
+                }
+            }
+            return wb;
+        }
+
+        /// <summary>
+        /// Workbook连接方案二
+        /// </summary>
+        /// <param name="wbPath"></param>
+        /// <returns></returns>
+        private static _Workbook IAttachWorkbook2(string wbPath)
+        {
+            _Workbook _wb;
+            dynamic wb = null;
+            uint OBJID_NATIVEOM = Convert.ToUInt32("FFFFFFF0", 16);
+            Guid IID_DISPATCH = new Guid("00020400-0000-0000-C000-000000000046");
+            IntPtr XLhwnd = IntPtr.Zero;
+            do
+            {
+                //---------------
+                XLhwnd = FindWindowEx(IntPtr.Zero, XLhwnd, "XLMAIN", null);
+                if (IntPtr.Zero.Equals(XLhwnd))
+                {
+                    throw new Exception(string.Format("沒有找到已經打開的工作簿({0})", wbPath));
+                }
+                IntPtr XLDESKhwnd = FindWindowEx(XLhwnd, IntPtr.Zero, "XLDESK", null);
+                IntPtr WBhwnd = FindWindowEx(XLDESKhwnd, IntPtr.Zero, "EXCEL7", null);
+                AccessibleObjectFromWindow(WBhwnd, OBJID_NATIVEOM, ref IID_DISPATCH, ref wb);
+                //----------------
+                _wb = (Workbook)wb.ActiveCell.Parent.Parent;
+                if (_wb != null)
+                {
+                    if (_wb.FullName != wbPath)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            } while (true);
+            return wb;
+        }
 
         #region user32.dll oleacc.dll
         [DllImport("user32.dll")]

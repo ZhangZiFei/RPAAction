@@ -22,7 +22,5 @@
                 app.Range[range].Select();
             }
         }
-
-        private readonly string range;
     }
 }

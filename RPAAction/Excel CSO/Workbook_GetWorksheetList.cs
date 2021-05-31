@@ -18,7 +18,7 @@ namespace RPAAction.Excel_CSO
         protected override void action()
         {
             base.action();
-            initTable();
+            InitTable();
             _Worksheet _ws;
             foreach (object ws in wb.Worksheets)
             {
@@ -31,7 +31,7 @@ namespace RPAAction.Excel_CSO
 
         }
 
-        private void initTable()
+        private void InitTable()
         {
             table = new System.Data.DataTable();
             table.Columns.Add("Name");

@@ -19,7 +19,7 @@ namespace RPAAction.Excel_CSO
             AttachApp();
             if (app != null)
             {
-                initTable();
+                InitTable();
                 foreach (_Workbook wb in app.Workbooks)
                 {
                     table.Rows.Add(wb.Name, wb.FullName);
@@ -27,7 +27,7 @@ namespace RPAAction.Excel_CSO
             }
         }
 
-        private void initTable()
+        private void InitTable()
         {
             table = new System.Data.DataTable();
             table.Columns.Add("Name");
