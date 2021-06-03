@@ -55,12 +55,12 @@ namespace RPAAction.Data_CSO
             }
         }
 
-        protected override void setValue(string field, object value)
+        protected override void SetValue(string field, object value)
         {
             throw new NotImplementedException();
         }
 
-        protected override void updataRow()
+        protected override void UpdataRow()
         {
             throw new NotImplementedException();
         }
@@ -72,7 +72,7 @@ namespace RPAAction.Data_CSO
             cmd.ExecuteNonQuery();
         }
 
-        private string connStr = null;
-        private SqlConnection conn;
+        private readonly string connStr = null;
+        private readonly SqlConnection conn;
     }
 }

@@ -53,7 +53,7 @@ namespace RPAAction.Data_CSO
 
         public override object GetValue(int ordinal)
         {
-            return cache[readingRow - cacheRowBase, ordinal + 1];
+            return cache[ReadingRow - cacheRowBase, ordinal + 1];
         }
 
         public override bool Read()
@@ -61,7 +61,7 @@ namespace RPAAction.Data_CSO
             ++readRow;
             if (CanRead)
             {
-                if (needCashe)
+                if (NeedCashe)
                     ReadCashe();
                 return true;
             }
@@ -96,7 +96,7 @@ namespace RPAAction.Data_CSO
         /// <summary>
         /// 正在读取的行数
         /// </summary>
-        private int readingRow => readRow + 1;
+        private int ReadingRow => readRow + 1;
 
         /// <summary>
         /// 数据是否存在标题
@@ -108,7 +108,7 @@ namespace RPAAction.Data_CSO
         /// 是否存在可以读取的数据
         /// </summary>
         /// <returns></returns>
-        private bool CanRead => _RowCont - readingRow >= 0;
+        private bool CanRead => _RowCont - ReadingRow >= 0;
 
         #region 緩存
 
@@ -146,7 +146,7 @@ namespace RPAAction.Data_CSO
         /// <summary>
         /// 是否需要讀取緩存
         /// </summary>
-        private bool needCashe => readingRow > cacheRow;
+        private bool NeedCashe => ReadingRow > cacheRow;
 
         /// <summary>
         /// 读取缓存

@@ -58,9 +58,9 @@ namespace RPAAction.Data_CSO
             {
                 for (int i = 0; i < count; i++)
                 {
-                    setValue(reader.GetName(i), reader.GetValue(i));
+                    SetValue(reader.GetName(i), reader.GetValue(i));
                 }
-                updataRow();
+                UpdataRow();
             }
         }
 
@@ -73,8 +73,8 @@ namespace RPAAction.Data_CSO
 
         protected string tableName;
 
-        protected abstract void setValue(string field, object value);
-        protected abstract void updataRow();
+        protected abstract void SetValue(string field, object value);
+        protected abstract void UpdataRow();
         protected abstract void CreateTable(RPADataReader r);
 
         protected string GetCreateTableString(RPADataReader r, string type)

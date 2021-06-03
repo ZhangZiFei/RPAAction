@@ -8,7 +8,7 @@ namespace RPAAction.Data_CSO
 
         public DataTableDataImport(DataTable table = null)
         {
-            this.table = table == null ? new DataTable() : table;
+            this.table = table ?? new DataTable();
         }
 
         public override void Dispose()
@@ -29,14 +29,14 @@ namespace RPAAction.Data_CSO
             }
         }
 
-        protected override void setValue(string field, object value)
+        protected override void SetValue(string field, object value)
         {
             if (table.Rows.Count <= writeRow)
                 table.Rows.Add();
             table.Rows[writeRow][field] = value;
         }
 
-        protected override void updataRow()
+        protected override void UpdataRow()
         {
             ++writeRow;
         }
