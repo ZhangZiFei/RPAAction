@@ -1,10 +1,6 @@
 ﻿using RPAAction.Base;
 using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPAAction.Data_CSO
 {
