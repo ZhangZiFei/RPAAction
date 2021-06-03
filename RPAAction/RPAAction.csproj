@@ -102,6 +102,8 @@
     <Compile Include="Base\ActionException.cs" />
     <Compile Include="Data CSO\AccessToExcel.cs" />
     <Compile Include="Data CSO\DataAction.cs" />
+    <Compile Include="Data CSO\DataTableDataImport.cs" />
+    <Compile Include="Data CSO\DataTableDataReader.cs" />
     <Compile Include="Data CSO\ExcelDataReader.cs" />
     <Compile Include="Data CSO\RPADataImport.cs" />
     <Compile Include="Data CSO\RPADataReader.cs" />
