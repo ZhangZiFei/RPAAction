@@ -6,7 +6,7 @@ namespace RPAAction.Excel_CSO
     /// 进程-打开工作簿
     /// 如果工作簿已经打开则会关闭工作簿(且不会保存)并重新打开
     /// </summary>
-    class Process_OpenWorkbook : ExcelAction
+    public class Process_OpenWorkbook : ExcelAction
     {
         /// <param name="wbPath">工作簿路径</param>
         /// <param name="readOnly">是否以只读模式打开,默认false</param>

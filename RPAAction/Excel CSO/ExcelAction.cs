@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace RPAAction.Excel_CSO
 {
-    abstract class ExcelAction : Base.Action
+    public abstract class ExcelAction : Base.Action
     {
         /// <summary>
         /// 杀死Excel进程

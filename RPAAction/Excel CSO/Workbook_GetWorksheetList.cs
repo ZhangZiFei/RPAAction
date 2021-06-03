@@ -5,7 +5,7 @@ namespace RPAAction.Excel_CSO
     /// <summary>
     /// 工作簿-获取工作表列表
     /// </summary>
-    class Workbook_GetWorksheetList : ExcelAction
+    public class Workbook_GetWorksheetList : ExcelAction
     {
         public System.Data.DataTable table = null;
 

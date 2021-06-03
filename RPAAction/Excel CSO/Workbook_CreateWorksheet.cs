@@ -3,7 +3,7 @@
     /// <summary>
     /// 工作簿-创建工作表
     /// </summary>
-    class Workbook_CreateWorksheet : ExcelAction
+    public class Workbook_CreateWorksheet : ExcelAction
     {
         public new string wsName = null;
 

@@ -5,7 +5,7 @@ namespace RPAAction.Oledb_CSO
     /// <summary>
     /// Excel数据导入Oledb
     /// </summary>
-    class ExcelImportToOledb : OledbAction
+    public class ExcelImportToOledb : OledbAction
     {
         /// <param name="excelPath">Excel文件路径</param>
         /// <param name="acessPath">Access文件路径</param>

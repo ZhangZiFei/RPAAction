@@ -11,7 +11,7 @@ namespace RPAAction.Excel_CSO
     /// 进程-清理
     /// 处理<see cref="_Application"/>以适应用户操作
     /// </summary>
-    class Process_ClearUp : ExcelAction
+    public class Process_ClearUp : ExcelAction
     {
         public Process_ClearUp()
         {

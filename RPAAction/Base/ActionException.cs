@@ -2,7 +2,7 @@
 
 namespace RPAAction.Base
 {
-    class ActionException : Exception
+    public class ActionException : Exception
     {
         public ActionException()
             : base()

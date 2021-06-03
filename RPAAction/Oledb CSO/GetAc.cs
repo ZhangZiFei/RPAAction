@@ -3,7 +3,7 @@
     /// <summary>
     /// 执行sql并获取影响行数
     /// </summary>
-    class GetAc : OledbAction
+    public class GetAc : OledbAction
     {
         /// <summary>
         /// 影响行数

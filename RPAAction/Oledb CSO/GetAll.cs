@@ -6,7 +6,7 @@ namespace RPAAction.Oledb_CSO
     /// <summary>
     /// 执行sql并获取结果和行数
     /// </summary>
-    class GetAll : OledbAction
+    public class GetAll : OledbAction
     {
         /// <summary>
         /// 结果

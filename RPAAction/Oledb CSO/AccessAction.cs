@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace RPAAction.Oledb_CSO
 {
-    abstract class OledbAction : Base.Action
+    public abstract class OledbAction : Base.Action
     {
         /// <summary>
         /// 释放指定的连接,如果参数 connStr 为 "" 或者 <see cref="null"/> 则视为释放所有连接

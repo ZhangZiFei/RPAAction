@@ -5,7 +5,7 @@ namespace RPAAction.Excel_CSO
     /// <summary>
     /// 进程-获取工作簿列表
     /// </summary>
-    class Process_GetWorkbookList : ExcelAction
+    public class Process_GetWorkbookList : ExcelAction
     {
         public System.Data.DataTable table = null;
 

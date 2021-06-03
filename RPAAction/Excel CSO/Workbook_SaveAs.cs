@@ -12,7 +12,7 @@ namespace RPAAction.Excel_CSO
     /// 工作簿-另存为
     /// 如果 newWbPath 存在文件将抛出异常
     /// </summary>
-    class Workbook_SaveAs : ExcelAction
+    public class Workbook_SaveAs : ExcelAction
     {
         public Workbook_SaveAs(string wbPath = null, string newWbPath = null)
             : base(wbPath)

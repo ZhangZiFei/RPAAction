@@ -6,7 +6,7 @@ namespace RPAAction.Excel_CSO
     /// 进程-关闭
     /// 自动当前用户下的所有Excel进程
     /// </summary>
-    class Process_Close : ExcelAction
+    public class Process_Close : ExcelAction
     {
         public Process_Close()
         {

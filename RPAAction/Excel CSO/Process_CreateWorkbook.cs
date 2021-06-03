@@ -7,7 +7,7 @@ namespace RPAAction.Excel_CSO
     /// 进程-创建工作簿
     /// 如果创建的文件已经存在则抛出异常
     /// </summary>
-    class Process_CreateWorkbook : ExcelAction
+    public class Process_CreateWorkbook : ExcelAction
     {
         public Process_CreateWorkbook(string wbPath)
         {

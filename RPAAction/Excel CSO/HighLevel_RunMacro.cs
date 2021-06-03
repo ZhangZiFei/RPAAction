@@ -7,7 +7,7 @@ namespace RPAAction.Excel_CSO
     /// <summary>
     /// 高阶-运行Excel宏
     /// </summary>
-    class HighLevel_RunMacro : ExcelAction
+    public class HighLevel_RunMacro : ExcelAction
     {
         /// <param name="wbPath"></param>
         /// <param name="wsName"></param>

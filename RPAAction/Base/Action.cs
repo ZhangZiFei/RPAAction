@@ -2,7 +2,7 @@
 
 namespace RPAAction.Base
 {
-    abstract class Action
+    public abstract class Action
     {
         /// <summary>
         /// 该<see cref="Action"/>是否已经运行过

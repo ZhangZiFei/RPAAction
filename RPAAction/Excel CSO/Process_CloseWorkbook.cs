@@ -9,7 +9,7 @@ namespace RPAAction.Excel_CSO
     /// <summary>
     /// 进程-关闭工作簿
     /// </summary>
-    class Process_CloseWorkbook : ExcelAction
+    public class Process_CloseWorkbook : ExcelAction
     {
         public Process_CloseWorkbook(string wbPath = null, bool isSave  = false)
             : base(wbPath)

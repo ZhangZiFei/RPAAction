@@ -3,7 +3,7 @@
     /// <summary>
     /// 单元格-聚焦
     /// </summary>
-    class Range_Active : ExcelAction
+    public class Range_Active : ExcelAction
     {
         public Range_Active(string wbPath = null, string wsName = null, string range = null)
             : base(wbPath, wsName)

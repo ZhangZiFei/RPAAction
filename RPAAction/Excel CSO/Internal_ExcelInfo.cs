@@ -11,7 +11,7 @@ namespace RPAAction.Excel_CSO
     /// 内部-ExcelInfo
     /// 自动打开Excel并且获取想相关COM对象和相关信息
     /// </summary>
-    class Internal_ExcelInfo : ExcelAction
+    public class Internal_ExcelInfo : ExcelAction
     {
         /// <param name="wbPath">工作簿路径, 如果为空视为获取活动工作簿</param>
         /// <param name="wsName">工作表名称, 如果为空视为获取活动工作表</param>
