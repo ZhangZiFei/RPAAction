@@ -9,10 +9,10 @@ namespace RPAAction.Data_CSO
     {
         public SQLServerDataImport(string DataSource, string DataBase, string user, string pwd, string table)
         {
-            this.connStr = string.Format(@"Data Source={0};Initial Catalog={1};User ID={2};Pwd={3};", DataSource, DataBase, user, pwd);
+            connStr = string.Format(@"Data Source={0};Initial Catalog={1};User ID={2};Pwd={3};", DataSource, DataBase, user, pwd);
             conn = new SqlConnection(connStr);
             conn.Open();
-            this.tableName = table;
+            tableName = table;
         }
 
         public SQLServerDataImport(string connStr, string table)
@@ -20,13 +20,13 @@ namespace RPAAction.Data_CSO
             this.connStr = connStr;
             conn = new SqlConnection(connStr);
             conn.Open();
-            this.tableName = table;
+            tableName = table;
         }
 
         public SQLServerDataImport(SqlConnection conn, string table)
         {
             this.conn = conn;
-            this.tableName = table;
+            tableName = table;
         }
 
         public override void ImportFrom(DbDataReader reader)
