@@ -100,7 +100,6 @@
   <ItemGroup>
     <Compile Include="Base\Action.cs" />
     <Compile Include="Base\ActionException.cs" />
-    <Compile Include="Data CSO\AccessToExcel.cs" />
     <Compile Include="Data CSO\DataAction.cs" />
     <Compile Include="Data CSO\DataTableDataImport.cs" />
     <Compile Include="Data CSO\DataTableDataReader.cs" />
