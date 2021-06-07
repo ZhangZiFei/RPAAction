@@ -1,6 +1,5 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using RPAAction.Excel_CSO;
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
 
@@ -14,9 +13,11 @@ namespace RPAAction.Data_CSO
         /// <param name="MaxCashCount"></param>
         public ExcelDataImport(string ExcelPath = null, string Sheet = null, string range = "A1", bool withTitle = true, int MaxCashCount = 10000)
         {
-            eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range);
-            eInfo.CreateWorkbook = true;
-            eInfo.CreateWorksheet = true;
+            eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range)
+            {
+                CreateWorkbook = true,
+                CreateWorksheet = true
+            };
             eInfo.Run();
             this.withTitle = withTitle;
             this.MaxCashCount = MaxCashCount;
@@ -69,7 +70,7 @@ namespace RPAAction.Data_CSO
             }
         }
 
-        private Dictionary<string, int> Fields = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> Fields = new Dictionary<string, int>();
 
         /// <summary>
         /// Excel信息
