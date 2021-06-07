@@ -2,7 +2,7 @@
 
 namespace RPAAction.Data_CSO
 {
-    class DataTableDataReader : RPADataReader
+    public class DataTableDataReader : RPADataReader
     {
         public DataTableDataReader(DataTable table)
         {

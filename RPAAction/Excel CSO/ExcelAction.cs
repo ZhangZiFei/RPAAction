@@ -10,6 +10,16 @@ namespace RPAAction.Excel_CSO
     public abstract class ExcelAction : Base.Action
     {
         /// <summary>
+        /// 是否需要主動創建工作簿
+        /// </summary>
+        public bool CreateWorkbook = false;
+
+        /// <summary>
+        /// 是否需要主動創建工作表
+        /// </summary>
+        public bool CreateWorksheet = false;
+
+        /// <summary>
         /// 杀死Excel进程
         /// </summary>
         /// <param name="app"></param>
@@ -326,11 +336,22 @@ namespace RPAAction.Excel_CSO
             isOpenApp = AttachApp() == null;
             if (CheckString(wbPath))
             {
-                wb = AttachWorkbook(wbPath);
-                if (wb == null)
+                if (File.Exists(wbPath))
                 {
-                    wb = OpenWorkbook(wbPath);
-                    isOpenWorkbook = true;
+                    wb = AttachWorkbook(wbPath);
+                    if (wb == null)
+                    {
+                        wb = OpenWorkbook(wbPath);
+                        isOpenWorkbook = true;
+                    }
+                }
+                else if (CreateWorkbook)
+                {
+                    wb = new Process_CreateWorkbook(wbPath).wb;
+                }
+                else
+                {
+                    throw new ActionException(string.Format("文件({0})不存在", wbPath));
                 }
             }
             else
@@ -363,7 +384,14 @@ namespace RPAAction.Excel_CSO
                 }
                 catch (COMException)
                 {
-                    throw new ActionException(string.Format("在工作簿({0})中没有找到工作表({1})", wbPath, wsName));
+                    if (CreateWorksheet)
+                    {
+                        ws = new Workbook_CreateWorksheet(wbPath, wsName).ws;
+                    }
+                    else
+                    {
+                        throw new ActionException(string.Format("在工作簿({0})中没有找到工作表({1})", wbPath, wsName));
+                    }
                 }
             }
             else
@@ -448,7 +476,7 @@ namespace RPAAction.Excel_CSO
                 XLhwnd = FindWindowEx(IntPtr.Zero, XLhwnd, "XLMAIN", null);
                 if (IntPtr.Zero.Equals(XLhwnd))
                 {
-                    throw new Exception(string.Format("沒有找到已經打開的工作簿({0})", wbPath));
+                    return null;
                 }
                 IntPtr XLDESKhwnd = FindWindowEx(XLhwnd, IntPtr.Zero, "XLDESK", null);
                 IntPtr WBhwnd = FindWindowEx(XLDESKhwnd, IntPtr.Zero, "EXCEL7", null);

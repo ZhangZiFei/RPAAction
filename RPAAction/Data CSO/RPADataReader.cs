@@ -10,6 +10,13 @@ namespace RPAAction.Data_CSO
     /// </summary>
     public abstract class RPADataReader : DbDataReader
     {
+        public static DbDataReader GetDbDataReader(DbConnection conn, string sql)
+        {
+            DbCommand cmd = conn.CreateCommand();
+            cmd.CommandText = sql;
+            return cmd.ExecuteReader();
+        }
+
         [Obsolete]
         public override object this[int ordinal] => throw new NotImplementedException();
 

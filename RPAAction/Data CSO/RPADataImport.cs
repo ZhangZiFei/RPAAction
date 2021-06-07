@@ -1,5 +1,6 @@
 ﻿using RPAAction.Base;
 using System;
+using System.Data.Common;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,11 +16,11 @@ namespace RPAAction.Data_CSO
         /// </summary>
         /// <param name="i"></param>
         /// <param name="r"></param>
-        public static void ImportDispose(RPADataImport i, RPADataReader r)
+        public static void ImportDispose(DbDataReader r, RPADataImport i)
         {
-            using (i)
+            using (r)
             {
-                using (r)
+                using (i)
                 {
                     i.ImportFrom(r);
                 }
@@ -32,16 +33,16 @@ namespace RPAAction.Data_CSO
         /// <param name="i"></param>
         /// <param name="r"></param>
         /// <returns></returns> 
-        public static async Task ImportDisposeAsync(RPADataImport i, RPADataReader r)
+        public static async Task ImportDisposeAsync(DbDataReader r, RPADataImport i)
         {
             await Task.Run(() => {
-                ImportDispose(i, r);
+                ImportDispose(r, i);
             });
         }
 
         public abstract void Dispose();
 
-        public virtual void ImportFrom(RPADataReader reader)
+        public virtual void ImportFrom(DbDataReader reader)
         {
             try
             {
@@ -64,7 +65,7 @@ namespace RPAAction.Data_CSO
             }
         }
 
-        public virtual async Task ImportFromAsync(RPADataReader reader)
+        public virtual async Task ImportFromAsync(DbDataReader reader)
         {
             await Task.Run(()=> {
                 ImportFrom(reader);
@@ -75,9 +76,9 @@ namespace RPAAction.Data_CSO
 
         protected abstract void SetValue(string field, object value);
         protected abstract void UpdataRow();
-        protected abstract void CreateTable(RPADataReader r);
+        protected abstract void CreateTable(DbDataReader r);
 
-        protected string GetCreateTableString(RPADataReader r, string type)
+        protected string GetCreateTableString(DbDataReader r, string type)
         {
             StringBuilder sql = new StringBuilder("CREATE TABLE ");
             sql.Append(tableName);

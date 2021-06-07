@@ -13,11 +13,13 @@ namespace RPAAction.Data_CSO
         /// <param name="ExcelPath"></param>
         /// <param name="Sheet"></param>
         /// <param name="range">如果忽略视为已使用的单元格</param>
+        /// <param name="MaxCashCount"></param>
         public ExcelDataReader(string ExcelPath = null, string Sheet = null, string range = "used", int MaxCashCount = 10000)
             : base()
         {
             //准备Excel
             eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range);
+            eInfo.Run();
 
             this.MaxCashCount = MaxCashCount;
             _FieldCount = eInfo.ws.UsedRange.Columns.Count;

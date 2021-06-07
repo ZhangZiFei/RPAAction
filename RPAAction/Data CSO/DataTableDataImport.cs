@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.Common;
 
 namespace RPAAction.Data_CSO
 {
@@ -16,7 +17,7 @@ namespace RPAAction.Data_CSO
 
         }
 
-        protected override void CreateTable(RPADataReader r)
+        protected override void CreateTable(DbDataReader r)
         {
             string rName;
             for (int i = 0; i < r.FieldCount; i++)

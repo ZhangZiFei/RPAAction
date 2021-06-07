@@ -1,5 +1,6 @@
 ﻿using RPAAction.Base;
 using System;
+using System.Data.Common;
 using System.Data.SqlClient;
 
 namespace RPAAction.Data_CSO
@@ -28,7 +29,7 @@ namespace RPAAction.Data_CSO
             this.tableName = table;
         }
 
-        public override void ImportFrom(RPADataReader reader)
+        public override void ImportFrom(DbDataReader reader)
         {
             try
             {
@@ -65,7 +66,7 @@ namespace RPAAction.Data_CSO
             throw new NotImplementedException();
         }
 
-        protected override void CreateTable(RPADataReader r)
+        protected override void CreateTable(DbDataReader r)
         {
             string sql = GetCreateTableString(r, "text");
             var cmd = new SqlCommand(sql.ToString(), conn);

@@ -18,7 +18,6 @@ namespace RPAAction.Excel_CSO
         public Internal_ExcelInfo(string wbPath = null, string wsName = null, string range = null)
             : base(wbPath, wsName, range)
         {
-            Run();
         }
 
         public new _Application app => ExcelAction.app;
