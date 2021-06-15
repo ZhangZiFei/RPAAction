@@ -20,42 +20,42 @@ namespace RPAAction.Excel_CSO
         {
         }
 
-        public new _Application app => ExcelAction.app;
+        public _Application App => ExcelAction.app;
 
-        public new _Workbook wb => base.wb;
+        public _Workbook Wb => base.wb;
 
-        public new _Worksheet ws => base.ws;
+        public _Worksheet Ws => base.ws;
 
         public new Range R => base.R;
 
         /// <summary>
         /// 工作簿路径
         /// </summary>
-        public new string wbPath => base.wbPath;
+        public string WbPath => base.wbPath;
 
         /// <summary>
         /// 工作簿文件名(带后缀)
         /// </summary>
-        public new string wbFileName => base.wbFileName;
+        public string WbFileName => base.wbFileName;
 
         /// <summary>
         /// 工作表名称
         /// </summary>
-        public new string wsName => base.wsName;
+        public string WsName => base.wsName;
 
         /// <summary>
         /// 单元格名称
         /// </summary>
-        public new string range => base.range;
+        public new string Range => base.range;
 
         /// <summary>
         /// <see cref="ExcelAction.app"/>是否由当前的Action打开
         /// </summary>
-        public new bool isOpenApp => base.isOpenApp;
+        public bool IsOpenApp => base.isOpenApp;
 
         /// <summary>
-        /// <see cref="wb"/>是否由当前Action打开
+        /// <see cref="Wb"/>是否由当前Action打开
         /// </summary>
-        public new bool isOpenWorkbook => base.isOpenWorkbook;
+        public bool IsOpenWorkbook => base.isOpenWorkbook;
     }
 }
