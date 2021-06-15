@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Office.Interop.Excel;
 using RPAAction.Excel_CSO;
+using RPAAction.Base;
 
 namespace RPAAction.Data_CSO
 {
@@ -20,15 +21,15 @@ namespace RPAAction.Data_CSO
             //准备Excel
             eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range);
             eInfo.Run();
-
+            R = eInfo.App.Union(eInfo.R, eInfo.Ws.UsedRange);
             this.MaxCashCount = MaxCashCount;
-            _FieldCount = eInfo.ws.UsedRange.Columns.Count;
-            _RowCont = eInfo.ws.UsedRange.Rows.Count - 1;
+            _FieldCount = R.Columns.Count;
+            _RowCont = R.Rows.Count - 1;
 
             //获取标题
             if (HasTitle)
             {
-                FieldValues = ((Range)eInfo.ws.UsedRange.Rows[1]).Value[10];
+                FieldValues = ((Range)R.Rows[1]).Value[10];
             }
         }
 
@@ -36,13 +37,13 @@ namespace RPAAction.Data_CSO
         {
             if (! isClosed)
             {
-                if (eInfo.isOpenApp)
+                if (eInfo.IsOpenApp)
                 {
                     new Process_Close();
                 }
-                else if (eInfo.isOpenWorkbook)
+                else if (eInfo.IsOpenWorkbook)
                 {
-                    eInfo.wb.Close(false);
+                    eInfo.Wb.Close(false);
                 }
                 isClosed = true;
             }
@@ -50,7 +51,15 @@ namespace RPAAction.Data_CSO
 
         public override string GetName(int ordinal)
         {
-            return FieldValues[1, ordinal + 1].ToString(); 
+            object a = FieldValues[1, ordinal + 1];
+            if (a == null)
+            {
+                throw new ActionException(string.Format("文件({0})中{1}表的\"{2}\"單元格第{3}列的标题为空", eInfo.WbPath, eInfo.WsName, eInfo.Range, ordinal + 1));
+            }
+            else
+            {
+                return a.ToString();
+            }
         }
 
         public override object GetValue(int ordinal)
@@ -74,6 +83,11 @@ namespace RPAAction.Data_CSO
         private bool isClosed = false;
 
         private readonly Internal_ExcelInfo eInfo;
+
+        /// <summary>
+        /// 讀取的單元格區域
+        /// </summary>
+        private readonly Range R;
 
         /// <summary>
         /// 标题长度
@@ -161,7 +175,7 @@ namespace RPAAction.Data_CSO
                 cacheRow = cacheRowBase + EachReadRow;
                 if (cacheRow > _RowCont)
                     cacheRow = _RowCont;
-                cache = ((Range)eInfo.ws.UsedRange.Rows[(cacheRowBase + 2) + ":" + (cacheRow + 2)]).Value[10];
+                cache = (R.Rows[(cacheRowBase + 2) + ":" + (cacheRow + 2)]).Value[10];
             }
         }
 

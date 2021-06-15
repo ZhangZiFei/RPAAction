@@ -254,6 +254,32 @@ namespace RPAAction.Excel_CSO
             }
         }
 
+        public static Range Range(_Worksheet ws, string range)
+        {
+            Range R = null;
+            if (CheckString(range))
+            {
+                switch (range)
+                {
+                    case "used":
+                        R = ws.UsedRange;
+                        break;
+                    default:
+                        R = app.Range[range];
+                        break;
+                }
+            }
+            else
+            {
+                dynamic r = app.Selection;
+                if (r is Range)
+                {
+                    R = r;
+                }
+            }
+            return R;
+        }
+
         /// <param name="wbPath">工作簿路径, 如果为空视为获取活动工作簿</param>
         /// <param name="wsName">工作表名称, 如果为空视为获取活动工作表</param>
         public ExcelAction(string wbPath = null, string wsName = null, string range = null)
@@ -348,6 +374,7 @@ namespace RPAAction.Excel_CSO
                 else if (CreateWorkbook)
                 {
                     wb = new Process_CreateWorkbook(wbPath).wb;
+                    isOpenWorkbook = true;
                 }
                 else
                 {
@@ -407,26 +434,7 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         protected void GetR()
         {
-            if (CheckString(range))
-            {
-                switch (range)
-                {
-                    case "used":
-                        R = ws.UsedRange;
-                        break;
-                    default:
-                        R = app.Range[range];
-                        break;
-                }
-            }
-            else
-            {
-                dynamic r = app.Selection;
-                if (r is Range)
-                {
-                    R = r;
-                }
-            }
+            R = Range(ws, range);
         }
 
         //---------- private ----------

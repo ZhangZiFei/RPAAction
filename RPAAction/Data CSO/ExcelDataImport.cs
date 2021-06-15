@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.Excel;
+using RPAAction.Base;
 using RPAAction.Excel_CSO;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -26,11 +27,11 @@ namespace RPAAction.Data_CSO
         public override void Dispose()
         {
             PushCash();
-            eInfo.wb.Save();
-            if (eInfo.isOpenWorkbook)
+            eInfo.Wb.Save();
+            if (eInfo.IsOpenWorkbook)
             {
-                eInfo.wb.Close();
-                if (eInfo.isOpenApp)
+                eInfo.Wb.Close();
+                if (eInfo.IsOpenApp)
                 {
                     new Process_Close();
                 }
@@ -44,7 +45,14 @@ namespace RPAAction.Data_CSO
             cash = new object[EachCashRow, FieldCount];
             for (int i = 0; i < FieldCount; i++)
             {
-                Fields.Add(r.GetName(i), i);
+                if (Fields.ContainsKey(r.GetName(i)))
+                {
+                    throw new ActionException(string.Format("出现相同的标题\"{0}\"", r.GetName(i)));
+                }
+                else
+                {
+                    Fields.Add(r.GetName(i), i);
+                }
             }
             //标题
             if (withTitle)

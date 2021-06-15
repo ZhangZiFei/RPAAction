@@ -59,7 +59,14 @@ namespace RPAAction.Data_CSO
             {
                 for (int i = 0; i < count; i++)
                 {
-                    SetValue(reader.GetName(i), reader.GetValue(i));
+                    try
+                    {
+                        SetValue(reader.GetName(i), reader.GetValue(i));
+                    }
+                    catch (Exception e)
+                    {
+                        throw new ActionException(string.Format("在导入数据时\"{0}\"栏位的第{1}行的数据({2})导入错误,详细信息:\n", reader.GetName(i), i, reader.GetValue(i), e.Message));
+                    }
                 }
                 UpdataRow();
             }
@@ -78,16 +85,16 @@ namespace RPAAction.Data_CSO
         protected abstract void UpdataRow();
         protected abstract void CreateTable(DbDataReader r);
 
-        protected string GetCreateTableString(DbDataReader r, string type)
+        protected string GetCreateTableString(DbDataReader r, string type, string brackets1 = "[", string brackets2 = "]")
         {
             StringBuilder sql = new StringBuilder("CREATE TABLE ");
             sql.Append(tableName);
             sql.Append("(");
             for (int i = 0; i < r.FieldCount; i++)
             {
-                sql.Append("[");
+                sql.Append(brackets1);
                 sql.Append(r.GetName(i));
-                sql.Append("] ");
+                sql.Append(brackets2);
                 sql.Append(type);
                 sql.Append(",");
             }
