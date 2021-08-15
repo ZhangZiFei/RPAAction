@@ -363,4 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #diy
-RPAAction/Program.cs
+/RPAAction/Program.cs
+/RPAAction/Programs

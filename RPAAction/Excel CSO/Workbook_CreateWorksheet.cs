@@ -21,9 +21,9 @@
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
             //Create Worksheet
             if (CheckString(after))
             {

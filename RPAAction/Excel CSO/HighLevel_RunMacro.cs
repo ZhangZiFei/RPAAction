@@ -21,14 +21,14 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
             //运行宏
             if (!CheckString(MacroName))
             {
                 wb.Activate();
-                string MacroFullName = string.Format(@"'{0}'!{1}", wbFileName, MacroName);
+                string MacroFullName = $@"'{wbFileName}'!{MacroName}";
                 try
                 {
                     app.Run(MacroFullName);

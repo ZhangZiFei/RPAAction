@@ -15,9 +15,9 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
             InitTable();
             _Worksheet _ws;
             foreach (object ws in wb.Worksheets)

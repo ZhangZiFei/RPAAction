@@ -1,24 +1,16 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using RPAAction.Base;
+using RPAAction.Tool;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 
 namespace RPAAction.Excel_CSO
 {
-    public abstract class ExcelAction : Base.Action
+    public abstract class ExcelAction : Base.RPAAction
     {
-        /// <summary>
-        /// 是否需要主動創建工作簿
-        /// </summary>
-        public bool CreateWorkbook = false;
-
-        /// <summary>
-        /// 是否需要主動創建工作表
-        /// </summary>
-        public bool CreateWorksheet = false;
-
         /// <summary>
         /// 杀死Excel进程
         /// </summary>
@@ -67,8 +59,9 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 设置Excel进程的显示状态
         /// </summary>
-        public static void ShowApp(_Application app, bool b = true)
+        public static void ShowApp(_Application app = null, bool b = true)
         {
+            app = app ?? ExcelAction.app;
             app.Visible = b;
         }
 
@@ -81,6 +74,8 @@ namespace RPAAction.Excel_CSO
             app.DisplayAlerts = false;
             //取消用户控制模式
             app.UserControl = false;
+            //显示Excel窗口
+            app.Visible = true;
             return app;
         }
 
@@ -89,9 +84,9 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         public static _Application ChangeAppForUser(_Application app)
         {
-            //禁止Excel进程的各种弹窗
+            //启用Excel进程的各种弹窗
             app.DisplayAlerts = true;
-            //取消用户控制模式
+            //开启用户控制模式
             app.UserControl = true;
             ShowApp(app);
             return app;
@@ -116,7 +111,7 @@ namespace RPAAction.Excel_CSO
         {
             if (CheckApp(app))
             {
-                return app;
+                return ChangeAppForRPA(app);
             }
             else
             {
@@ -335,6 +330,16 @@ namespace RPAAction.Excel_CSO
         protected Range R = null;
 
         /// <summary>
+        /// 是否需要主動創建工作簿
+        /// </summary>
+        protected bool CreateWorkbook = false;
+
+        /// <summary>
+        /// 是否需要主動創建工作表
+        /// </summary>
+        protected bool CreateWorksheet = false;
+
+        /// <summary>
         /// <see cref="app"/>是否由当前的Action打开
         /// </summary>
         protected bool isOpenApp = false;
@@ -345,13 +350,33 @@ namespace RPAAction.Excel_CSO
         protected bool isOpenWorkbook = false;
 
         /// <summary>
+        /// <see cref="wb"/>是否由当前Action创建
+        /// </summary>
+        protected bool isCreateWorkbook = false;
+
+        /// <summary>
+        /// <see cref="ws"/>是否由当前Action创建
+        /// </summary>
+        protected bool isCreateWorksheet = false;
+
+        /// <summary>
         /// 自动连接或者打开Excel,自动获取<see cref="app"/>,<see cref="wb"/>和<see cref="ws"/>
         /// </summary>
-        protected override void action()
+        protected override void Action()
         {
             GetWorkbook();
             GetSheet();
             GetR();
+        }
+
+        protected override void AfterRun()
+        {
+            base.AfterRun();
+
+            if (CheckApp(app) && app.Visible == true)
+            {
+                ChangeAppForUser(app);
+            }
         }
 
         /// <summary>
@@ -375,10 +400,11 @@ namespace RPAAction.Excel_CSO
                 {
                     wb = new Process_CreateWorkbook(wbPath).wb;
                     isOpenWorkbook = true;
+                    isCreateWorkbook = true;
                 }
                 else
                 {
-                    throw new ActionException(string.Format("文件({0})不存在", wbPath));
+                    throw new ActionException($"文件({wbPath})不存在");
                 }
             }
             else
@@ -388,7 +414,7 @@ namespace RPAAction.Excel_CSO
                 {
                     wb = app.ActiveWorkbook;
                     wbPath = wb.FullName;
-                    wbFileName = CheckString(wbPath) ? null : Path.GetFileName(wbPath);
+                    wbFileName = CheckString(wbPath) ? Path.GetFileName(wbPath) : "";
                 }
                 else
                 {
@@ -403,7 +429,28 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         protected void GetSheet()
         {
-            if (CheckString(wsName))
+            if (isCreateWorkbook)
+            {
+                ws = wb.Worksheets[1];
+                if (CheckString(wsName))
+                {
+                    ws.Name = wsName;
+                }
+                else
+                {
+                    wsName = ws.Name;
+                }
+                //删除其他的工作表
+                while (wb.Worksheets.Count > 1)
+                {
+                    _Worksheet worksheet = wb.Worksheets[2];
+                    if (!worksheet.Name.Equals(wsName))
+                    {
+                        worksheet.Delete();
+                    }
+                }
+            }
+            else if (CheckString(wsName))
             {
                 try
                 {
@@ -414,10 +461,11 @@ namespace RPAAction.Excel_CSO
                     if (CreateWorksheet)
                     {
                         ws = new Workbook_CreateWorksheet(wbPath, wsName).ws;
+                        isCreateWorksheet = true;
                     }
                     else
                     {
-                        throw new ActionException(string.Format("在工作簿({0})中没有找到工作表({1})", wbPath, wsName));
+                        throw new ActionException($"在工作簿({wbPath})中没有找到工作表({wsName})");
                     }
                 }
             }
@@ -473,7 +521,7 @@ namespace RPAAction.Excel_CSO
         /// <returns></returns>
         private static _Workbook IAttachWorkbook2(string wbPath)
         {
-            _Workbook _wb;
+            _Workbook _wb = null;
             dynamic wb = null;
             uint OBJID_NATIVEOM = Convert.ToUInt32("FFFFFFF0", 16);
             Guid IID_DISPATCH = new Guid("00020400-0000-0000-C000-000000000046");
@@ -490,7 +538,11 @@ namespace RPAAction.Excel_CSO
                 IntPtr WBhwnd = FindWindowEx(XLDESKhwnd, IntPtr.Zero, "EXCEL7", null);
                 AccessibleObjectFromWindow(WBhwnd, OBJID_NATIVEOM, ref IID_DISPATCH, ref wb);
                 //----------------
-                _wb = (Workbook)wb.ActiveCell.Parent.Parent;
+                try
+                {
+                    _wb = (Workbook)wb.ActiveCell.Parent.Parent;
+                }
+                catch (Exception) { }
                 if (_wb != null)
                 {
                     if (_wb.FullName != wbPath)

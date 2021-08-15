@@ -15,13 +15,13 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
             AttachOrOpenApp();
 
             if (File.Exists(wbPath))
             {
-                throw new ActionException(string.Format("文件({0})已经存在", wbPath));
+                throw new ActionException($"文件({wbPath})已经存在");
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(wbPath));

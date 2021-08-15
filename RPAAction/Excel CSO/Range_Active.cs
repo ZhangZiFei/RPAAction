@@ -12,9 +12,9 @@
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
             wb.Activate();
             ws.Select();
             if (range != null && (!range.Equals("")))

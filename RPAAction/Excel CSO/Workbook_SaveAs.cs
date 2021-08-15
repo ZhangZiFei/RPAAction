@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using RPAAction.Base;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RPAAction.Base;
 
 namespace RPAAction.Excel_CSO
 {
@@ -21,13 +16,13 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
 
             if (File.Exists(newWbPath))
             {
-                throw new ActionException(string.Format("文件({0})已经存在", newWbPath));
+                throw new ActionException($"文件({newWbPath})已经存在");
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(newWbPath));

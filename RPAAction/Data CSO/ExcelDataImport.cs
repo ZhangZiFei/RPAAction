@@ -14,17 +14,12 @@ namespace RPAAction.Data_CSO
         /// <param name="MaxCashCount"></param>
         public ExcelDataImport(string ExcelPath = null, string Sheet = null, string range = "A1", bool withTitle = true, int MaxCashCount = 10000)
         {
-            eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range)
-            {
-                CreateWorkbook = true,
-                CreateWorksheet = true
-            };
-            eInfo.Run();
+            eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range, true, true);
             this.withTitle = withTitle;
             this.MaxCashCount = MaxCashCount;
         }
 
-        public override void Dispose()
+        protected override void Close()
         {
             PushCash();
             eInfo.Wb.Save();
@@ -36,6 +31,7 @@ namespace RPAAction.Data_CSO
                     new Process_Close();
                 }
             }
+            eInfo.Close();
         }
 
         protected override void CreateTable(DbDataReader r)
@@ -47,7 +43,7 @@ namespace RPAAction.Data_CSO
             {
                 if (Fields.ContainsKey(r.GetName(i)))
                 {
-                    throw new ActionException(string.Format("出现相同的标题\"{0}\"", r.GetName(i)));
+                    throw new ActionException($"出现相同的标题\"{r.GetName(i)}\"");
                 }
                 else
                 {

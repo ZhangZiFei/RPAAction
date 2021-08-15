@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 
 namespace RPAAction.Excel_CSO
 {
@@ -18,9 +13,9 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            if(AttachApp() !=  null)
+            if (AttachApp() != null)
             {
                 ChangeAppForUser(app);
             }

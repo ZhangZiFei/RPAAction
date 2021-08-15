@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 
 namespace RPAAction.Excel_CSO
 {
@@ -15,9 +10,14 @@ namespace RPAAction.Excel_CSO
     {
         /// <param name="wbPath">工作簿路径, 如果为空视为获取活动工作簿</param>
         /// <param name="wsName">工作表名称, 如果为空视为获取活动工作表</param>
-        public Internal_ExcelInfo(string wbPath = null, string wsName = null, string range = null)
+        /// <param name="CreateWorkbook">是否需要主動創建工作簿</param>
+        /// <param name="CreateWorksheet">是否需要主動創建工作表</param>
+        public Internal_ExcelInfo(string wbPath = null, string wsName = null, string range = null, bool CreateWorkbook = false, bool CreateWorksheet = false)
             : base(wbPath, wsName, range)
         {
+            this.CreateWorkbook = CreateWorkbook;
+            this.CreateWorksheet = CreateWorksheet;
+            Run();
         }
 
         public _Application App => ExcelAction.app;
@@ -57,5 +57,21 @@ namespace RPAAction.Excel_CSO
         /// <see cref="Wb"/>是否由当前Action打开
         /// </summary>
         public bool IsOpenWorkbook => base.isOpenWorkbook;
+
+        public void Close()
+        {
+            if (!isClosed)
+            {
+                isClosed = true;
+                base.AfterRun();
+            }
+        }
+
+        protected override void AfterRun()
+        {
+            
+        }
+
+        private bool isClosed = false;
     }
 }

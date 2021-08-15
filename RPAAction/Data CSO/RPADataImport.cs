@@ -35,12 +35,20 @@ namespace RPAAction.Data_CSO
         /// <returns></returns> 
         public static async Task ImportDisposeAsync(DbDataReader r, RPADataImport i)
         {
-            await Task.Run(() => {
+            await Task.Run(() =>
+            {
                 ImportDispose(r, i);
             });
         }
 
-        public abstract void Dispose();
+        public void Dispose()
+        {
+            if (!isClosed)
+            {
+                Close();
+                isClosed = true;
+            }
+        }
 
         public virtual void ImportFrom(DbDataReader reader)
         {
@@ -65,16 +73,18 @@ namespace RPAAction.Data_CSO
                     }
                     catch (Exception e)
                     {
-                        throw new ActionException(string.Format("在导入数据时\"{0}\"栏位的第{1}行的数据({2})导入错误,详细信息:\n", reader.GetName(i), i, reader.GetValue(i), e.Message));
+                        throw new ActionException($"在导入数据时\"{reader.GetName(i)}\"栏位的第{i}行的数据({reader.GetValue(i)})导入错误,详细信息:\n{e.Message}");
                     }
                 }
                 UpdataRow();
             }
         }
+        protected abstract void Close();
 
         public virtual async Task ImportFromAsync(DbDataReader reader)
         {
-            await Task.Run(()=> {
+            await Task.Run(() =>
+            {
                 ImportFrom(reader);
             });
         }
@@ -88,13 +98,16 @@ namespace RPAAction.Data_CSO
         protected string GetCreateTableString(DbDataReader r, string type, string brackets1 = "[", string brackets2 = "]")
         {
             StringBuilder sql = new StringBuilder("CREATE TABLE ");
+            sql.Append(brackets1);
             sql.Append(tableName);
-            sql.Append("(");
+            sql.Append(brackets2);
+            sql.Append(" (");
             for (int i = 0; i < r.FieldCount; i++)
             {
                 sql.Append(brackets1);
                 sql.Append(r.GetName(i));
                 sql.Append(brackets2);
+                sql.Append(" ");
                 sql.Append(type);
                 sql.Append(",");
             }
@@ -102,5 +115,7 @@ namespace RPAAction.Data_CSO
             sql.Append(")");
             return sql.ToString();
         }
+
+        private bool isClosed = false;
     }
 }

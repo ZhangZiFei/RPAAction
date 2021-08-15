@@ -26,9 +26,9 @@ namespace RPAAction.Oledb_CSO
         {
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
             table = new DataTable();
 
             using (OleDbDataAdapter a = new OleDbDataAdapter(comm))

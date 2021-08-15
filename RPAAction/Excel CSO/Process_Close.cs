@@ -13,7 +13,7 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
             if (!CheckApp(app))
             {

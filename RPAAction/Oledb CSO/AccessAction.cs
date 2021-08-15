@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace RPAAction.Oledb_CSO
 {
-    public abstract class OledbAction : Base.Action
+    public abstract class OledbAction : Base.RPAAction
     {
         /// <summary>
         /// 释放指定的连接,如果参数 connStr 为 "" 或者 <see cref="null"/> 则视为释放所有连接
@@ -44,9 +44,11 @@ namespace RPAAction.Oledb_CSO
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                app = new Application();
-                app.Visible = true;
-                app.UserControl = true;
+                app = new Application
+                {
+                    Visible = true,
+                    UserControl = true
+                };
             }
             return app;
         }
@@ -59,7 +61,7 @@ namespace RPAAction.Oledb_CSO
         static public _Workbook AttachOrOpenExcelWorkbook(string excelPath)
         {
             _Application app = AttachOrOpenExcel();
-            _Workbook wb = null;
+            _Workbook wb;
             //试图连接
             if (excelPath == null || object.Equals("", excelPath))
             {
@@ -72,7 +74,7 @@ namespace RPAAction.Oledb_CSO
                 wb = (_Workbook)app.Workbooks[wbName];
                 if (!object.Equals(wb.FullName, excelPath))
                 {
-                    throw new Exception(string.Format(@"Excel无法打开两个名称相同的工作簿(试图打开--{0};已经打开--{1})", excelPath, wb.FullName));
+                    throw new Exception($@"Excel无法打开两个名称相同的工作簿(试图打开--{excelPath};已经打开--{wb.FullName})");
                 }
             }
             //打开
@@ -94,13 +96,15 @@ namespace RPAAction.Oledb_CSO
             }
             else
             {
-                this.connStr = filePathToConnStr(filePath);
+                this.connStr = FilePathToConnStr(filePath);
             }
             this.sql = sql;
         }
 
-        ~OledbAction()
+        protected override void AfterRun()
         {
+            base.AfterRun();
+
             if (comm != null)
             {
                 comm.Dispose();
@@ -110,7 +114,7 @@ namespace RPAAction.Oledb_CSO
         protected OleDbConnection conn;
         protected OleDbCommand comm;
 
-        protected override void action()
+        protected override void Action()
         {
             //获取 conn
             if (!connMap.TryGetValue(connStr, out conn))
@@ -143,17 +147,17 @@ namespace RPAAction.Oledb_CSO
         /// </summary>
         /// <param name="filePath">文件路径</param>
         /// <returns>转换好的连接字符串</returns>
-        private string filePathToConnStr(string filePath)
+        private string FilePathToConnStr(string filePath)
         {
             Regex check_accdb = new Regex(@"\.accdb$", RegexOptions.IgnoreCase);
 
             if (check_accdb.IsMatch(filePath))
             {
-                return string.Format(@"Provider=Microsoft.ACE.OLEDB.16.0;Data Source={0};", filePath);
+                return $@"Provider=Microsoft.ACE.OLEDB.16.0;Data Source={filePath};";
             }
             else
             {
-                throw new Exception(string.Format(@"不支持将该文件({0})转换为Oledb的连接字符串。", filePath));
+                throw new Exception($@"不支持将该文件({filePath})转换为Oledb的连接字符串。");
             }
         }
     }

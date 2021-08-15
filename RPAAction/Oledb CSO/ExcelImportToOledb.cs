@@ -20,9 +20,9 @@ namespace RPAAction.Oledb_CSO
             this.tableName = tableName;
         }
 
-        protected override void action()
+        protected override void Action()
         {
-            base.action();
+            base.Action();
             //获取工作表
             _Worksheet ws = getSheet();
             ws.Range["A1"].Select();

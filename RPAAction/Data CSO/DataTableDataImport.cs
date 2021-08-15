@@ -12,7 +12,7 @@ namespace RPAAction.Data_CSO
             this.table = table ?? new DataTable();
         }
 
-        public override void Dispose()
+        protected override void Close()
         {
 
         }
@@ -23,7 +23,7 @@ namespace RPAAction.Data_CSO
             for (int i = 0; i < r.FieldCount; i++)
             {
                 rName = r.GetName(i);
-                if (! table.Columns.Contains(rName))
+                if (!table.Columns.Contains(rName))
                 {
                     table.Columns.Add(rName);
                 }

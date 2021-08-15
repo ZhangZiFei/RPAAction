@@ -23,7 +23,7 @@ namespace RPAAction.Excel_CSO
             Run();
         }
 
-        protected override void action()
+        protected override void Action()
         {
             wb = AttachWorkbook(wbPath);
             if (wb != null)

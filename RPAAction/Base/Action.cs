@@ -2,10 +2,10 @@
 
 namespace RPAAction.Base
 {
-    public abstract class Action
+    public abstract class RPAAction
     {
         /// <summary>
-        /// 该<see cref="Action"/>是否已经运行过
+        /// 该<see cref="Base.RPAAction"/>是否已经运行过
         /// </summary>
         public bool IsRan { get => isRan; }
 
@@ -22,33 +22,63 @@ namespace RPAAction.Base
             return s != null && (!s.Equals(""));
         }
 
-        public Action Run()
+        public RPAAction Run()
         {
             if (!isRan)
             {
-#if DEBUG
-                action();
-#else
                 try
                 {
-                    action();
+                    BeforeRun();
+                    Action();
                 }
+#if !DEBUG
                 catch (Exception e)
                 {
                     this.e = e;
                 }
 #endif
+                finally
+                {
+#if !DEBUG
+                    try
+                    {
+#endif
+                        AfterRun();
+#if !DEBUG
+                    }
+                    catch (Exception) { }
+#endif
+                }
                 isRan = true;
             }
+            return this;
+        }
+
+        public RPAAction OutE(out string EType, out string EMes)
+        {
+            EType = this.EType;
+            EMes = this.EMes;
             return this;
         }
 
         /// <summary>
         /// Action的实现内容,按照规范,类中所有的存在副作用的代码均需要在这里实现
         /// </summary>
-        abstract protected void action();
+        protected abstract void Action();
+
+        protected virtual void BeforeRun()
+        {
+
+        }
+        protected virtual void AfterRun()
+        {
+
+        }
 
         private bool isRan;
+#if DEBUG
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:添加只读修饰符", Justification = "<挂起>")]
+#endif
         private Exception e = null;
     }
 }

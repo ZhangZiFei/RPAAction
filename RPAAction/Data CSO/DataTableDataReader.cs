@@ -32,7 +32,7 @@ namespace RPAAction.Data_CSO
         {
             return ++readingRowIndex < table.Rows.Count;
         }
-        
+
         private int readingRowIndex = -1;
         private readonly DataTable table;
     }

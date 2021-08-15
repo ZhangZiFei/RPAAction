@@ -9,7 +9,7 @@ namespace RPAAction.Data_CSO
     {
         public SQLServerDataImport(string DataSource, string DataBase, string user, string pwd, string table)
         {
-            connStr = string.Format(@"Data Source={0};Initial Catalog={1};User ID={2};Pwd={3};", DataSource, DataBase, user, pwd);
+            connStr = $@"Data Source={DataSource};Initial Catalog={DataBase};User ID={user};Pwd={pwd};";
             conn = new SqlConnection(connStr);
             conn.Open();
             tableName = table;
@@ -48,7 +48,7 @@ namespace RPAAction.Data_CSO
             }
         }
 
-        public override void Dispose()
+        protected override void Close()
         {
             if (connStr == null)
             {
