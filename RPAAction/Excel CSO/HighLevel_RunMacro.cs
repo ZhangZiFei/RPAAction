@@ -28,10 +28,9 @@ namespace RPAAction.Excel_CSO
             if (!CheckString(MacroName))
             {
                 wb.Activate();
-                string MacroFullName = $@"'{wbFileName}'!{MacroName}";
                 try
                 {
-                    app.Run(MacroFullName);
+                    RunVBA();
                 }
                 //沒有信任存取VAB專案物件模型
                 catch (System.Runtime.InteropServices.COMException come)
@@ -50,7 +49,7 @@ namespace RPAAction.Excel_CSO
                         {
                             throw new ActionException("添加vb函數失敗\n" + e.ToString());
                         }
-                        app.Run(MacroFullName);
+                        RunVBA();
                     }
                     else
                     {
@@ -58,6 +57,11 @@ namespace RPAAction.Excel_CSO
                     }
                 }
             }
+        }
+
+        private void RunVBA()
+        {
+            app.Run($@"'{wbFileName}'!{MacroName}");
         }
 
         private readonly string VBACode = null;
