@@ -136,6 +136,7 @@
     <Compile Include="Excel CSO\Process_OpenWorkbook.cs" />
     <Compile Include="Excel CSO\Workbook_SaveAs.cs" />
     <Compile Include="Excel CSO\Worksheet_Active.cs" />
+    <Compile Include="EXE\DataAction.cs" />
     <Compile Include="Oledb CSO\AccessAction.cs" />
     <Compile Include="Oledb CSO\ExcelImportToOledb.cs" />
     <Compile Include="Oledb CSO\GetAc.cs" />

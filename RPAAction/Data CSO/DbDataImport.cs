@@ -9,6 +9,7 @@ namespace RPAAction.Data_CSO
         public DbDataImport(DbConnection conn, string tableName, string brackets1 = "[", string brackets2 = "]")
         {
             this.conn = conn;
+            conn.Open();
             this.tableName = tableName;
             this.brackets1 = brackets1;
             this.brackets2 = brackets2;
@@ -16,6 +17,7 @@ namespace RPAAction.Data_CSO
 
         protected override void Close()
         {
+            transaction.Dispose();
             conn.Dispose();
         }
 
@@ -62,6 +64,13 @@ namespace RPAAction.Data_CSO
             }
         }
 
+        protected override void BefareImport()
+        {
+            base.BefareImport();
+
+            transaction = conn.BeginTransaction();
+        }
+
         protected override void SetValue(string field, object value)
         {
             if (value == null)
@@ -78,12 +87,20 @@ namespace RPAAction.Data_CSO
         {
             var cmd = conn.CreateCommand();
             cmd.CommandText = string.Format(InsterStr, Values);
+            cmd.Transaction = transaction;
             cmd.ExecuteNonQuery();
             Values = new object[FieldCount];
         }
 
-        private readonly DbConnection conn;
+        protected override void AfterImport()
+        {
+            base.AfterImport();
 
+            transaction.Commit();
+        }
+
+        private readonly DbConnection conn;
+        private DbTransaction transaction = null;
         private readonly string brackets1;
         private readonly string brackets2;
 

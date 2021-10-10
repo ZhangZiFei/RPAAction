@@ -63,7 +63,7 @@ namespace RPAAction.Data_CSO
 
         protected override void SetValue(string field, object value)
         {
-            cash[CashWriteRow, Fields[field]] = value;
+            cash[CashWriteRow, Fields[field]] = (value is string) ? ("'" + value.ToString()) : value;
         }
 
         protected override void UpdataRow()

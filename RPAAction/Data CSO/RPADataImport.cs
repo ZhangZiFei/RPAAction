@@ -62,6 +62,7 @@ namespace RPAAction.Data_CSO
                     throw e;
             }
 
+            BefareImport();
             int count = reader.FieldCount;
             while (reader.Read())
             {
@@ -78,6 +79,7 @@ namespace RPAAction.Data_CSO
                 }
                 UpdataRow();
             }
+            AfterImport();
         }
         protected abstract void Close();
 
@@ -94,6 +96,16 @@ namespace RPAAction.Data_CSO
         protected abstract void SetValue(string field, object value);
         protected abstract void UpdataRow();
         protected abstract void CreateTable(DbDataReader r);
+
+        protected virtual void BefareImport()
+        {
+
+        }
+
+        protected virtual void AfterImport()
+        {
+
+        }
 
         protected string GetCreateTableString(DbDataReader r, string type, string brackets1 = "[", string brackets2 = "]")
         {

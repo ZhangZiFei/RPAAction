@@ -1,8 +1,6 @@
 ﻿using Microsoft.Office.Interop.Excel;
 using RPAAction.Base;
-using RPAAction.Tool;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -238,12 +236,13 @@ namespace RPAAction.Excel_CSO
                     return XlFileFormat.xlCSV;
                 case ".html":
                     return XlFileFormat.xlHtml;
-                case ".txt":
-                    return XlFileFormat.xlUnicodeText;
                 case ".xml":
                     return XlFileFormat.xlXMLSpreadsheet;
                 case ".dif":
                     return XlFileFormat.xlDIF;
+                case ".xlsb":   //Excel 二进制工作簿
+                    return XlFileFormat.xlExcel12;
+                case ".txt":
                 default:
                     return XlFileFormat.xlUnicodeText;
             }
