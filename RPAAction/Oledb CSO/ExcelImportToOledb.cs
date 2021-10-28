@@ -24,7 +24,7 @@ namespace RPAAction.Oledb_CSO
         {
             base.Action();
             //获取工作表
-            _Worksheet ws = getSheet();
+            _Worksheet ws = GetSheet();
             ws.Range["A1"].Select();
 
             var a = new GetAll("", acessPath, "SELECT * FROM a");
@@ -32,12 +32,12 @@ namespace RPAAction.Oledb_CSO
         }
 
         private readonly string acessPath;
-        private string excelPath;
+        private readonly string excelPath;
         private string sheetName;
         private string tableName;
         private _Workbook wb;
 
-        private _Worksheet getSheet()
+        private _Worksheet GetSheet()
         {
             if (wb == null)
             {

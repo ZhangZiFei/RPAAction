@@ -29,6 +29,6 @@ namespace RPAAction.Excel_CSO
             wb.SaveAs(newWbPath, GetXlFileFormatByWbPath(newWbPath));
         }
 
-        private string newWbPath = null;
+        private readonly string newWbPath = null;
     }
 }

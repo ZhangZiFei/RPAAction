@@ -53,8 +53,8 @@
             base.wsName = wsName;
         }
 
-        private decimal position = 0;
-        private string before = null;
-        private string after = null;
+        private readonly decimal position = 0;
+        private readonly string before = null;
+        private readonly string after = null;
     }
 }
