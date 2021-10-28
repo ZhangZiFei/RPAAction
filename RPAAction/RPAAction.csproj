@@ -128,7 +128,7 @@
     <Compile Include="Excel CSO\Range_Active.cs" />
     <Compile Include="Excel CSO\Process_Close.cs" />
     <Compile Include="Excel CSO\ExcelAction.cs" />
-    <Compile Include="Excel CSO\HighLevel_RunMacro.cs" />
+    <Compile Include="Excel CSO\HighLevel_RunFunction.cs" />
     <Compile Include="Excel CSO\Workbook_Active.cs" />
     <Compile Include="Excel CSO\Workbook_CreateWorksheet.cs" />
     <Compile Include="Excel CSO\Workbook_DeleteWorksheet.cs" />
