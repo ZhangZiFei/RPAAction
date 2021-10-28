@@ -383,7 +383,7 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         protected void GetWorkbook()
         {
-            isOpenApp = AttachApp() == null;
+            isOpenApp = AttachApp() != null;
             if (CheckString(wbPath))
             {
                 if (File.Exists(wbPath))
@@ -394,6 +394,7 @@ namespace RPAAction.Excel_CSO
                         wb = OpenWorkbook(wbPath);
                         isOpenWorkbook = true;
                     }
+                    wbFileName = Path.GetFileName(wbPath);
                 }
                 else if (CreateWorkbook)
                 {
@@ -413,7 +414,7 @@ namespace RPAAction.Excel_CSO
                 {
                     wb = app.ActiveWorkbook;
                     wbPath = wb.FullName;
-                    wbFileName = CheckString(wbPath) ? Path.GetFileName(wbPath) : "";
+                    wbFileName = Path.GetFileName(wbPath);
                 }
                 else
                 {

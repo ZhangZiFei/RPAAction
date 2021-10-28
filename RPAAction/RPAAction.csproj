@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B60A04A4-4FF6-425B-B126-51D0A72F0E62}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>RPAAction</RootNamespace>
     <AssemblyName>RPAAction</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -75,6 +75,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Access, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -120,6 +123,7 @@
     <Compile Include="Data CSO\RPADataImport.cs" />
     <Compile Include="Data CSO\RPADataReader.cs" />
     <Compile Include="Data CSO\SQLServerDataImport.cs" />
+    <Compile Include="Excel CSO\HighLevel_RunFunction.cs" />
     <Compile Include="Excel CSO\Internal_ExcelInfo.cs" />
     <Compile Include="Excel CSO\Process_ClearUp.cs" />
     <Compile Include="Excel CSO\Process_CloseWorkbook.cs" />
@@ -128,7 +132,6 @@
     <Compile Include="Excel CSO\Range_Active.cs" />
     <Compile Include="Excel CSO\Process_Close.cs" />
     <Compile Include="Excel CSO\ExcelAction.cs" />
-    <Compile Include="Excel CSO\HighLevel_RunFunction.cs" />
     <Compile Include="Excel CSO\Workbook_Active.cs" />
     <Compile Include="Excel CSO\Workbook_CreateWorksheet.cs" />
     <Compile Include="Excel CSO\Workbook_DeleteWorksheet.cs" />

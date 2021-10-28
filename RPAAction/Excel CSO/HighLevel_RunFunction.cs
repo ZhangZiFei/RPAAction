@@ -9,11 +9,6 @@ namespace RPAAction.Excel_CSO
     /// </summary>
     public class HighLevel_RunFunction : ExcelAction
     {
-        public static void f()
-        {
-            new HighLevel_RunFunction();
-        }
-
         /// <summary>
         /// vba函数返回值
         /// </summary>
@@ -23,24 +18,24 @@ namespace RPAAction.Excel_CSO
         /// <param name="wsName"></param>
         /// <param name="VBACode"></param>
         /// <param name="MacroName">默认执行名称为"m"的宏</param>
-        public HighLevel_RunFunction(string wbPath = null, string wsName = null, string VBACode = null, string MacroName = null,
-            object param1 = null, object param2 = null, object param3 = null, object param4 = null, object param5 = null,
-            object param6 = null, object param7 = null, object param8 = null, object param9 = null, object param10 = null
+        public HighLevel_RunFunction(string wbPath = null, string wsName = null, string VBACode = null, string FunctionName = null,
+            string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "",
+            string param6 = "", string param7 = "", string param8 = "", string param9 = "", string param10 = ""
         )
             : base(wbPath, wsName)
         {
             this.VBACode = VBACode;
-            this.MacroName = CheckString(MacroName) ? MacroName : "m";
-            this.params1 = params1;
-            this.params2 = params2;
-            this.params3 = params3;
-            this.params4 = params4;
-            this.params5 = params5;
-            this.params6 = params6;
-            this.params7 = params7;
-            this.params8 = params8;
-            this.params9 = params9;
-            this.params10 = params10;
+            this.FunctionName = CheckString(FunctionName) ? FunctionName : "f";
+            this.param1 = CheckString(param1) ? param1 : Type.Missing;
+            this.param2 = CheckString(param2) ? param2 : Type.Missing;
+            this.param3 = CheckString(param3) ? param3 : Type.Missing;
+            this.param4 = CheckString(param4) ? param4 : Type.Missing;
+            this.param5 = CheckString(param5) ? param5 : Type.Missing;
+            this.param6 = CheckString(param6) ? param6 : Type.Missing;
+            this.param7 = CheckString(param7) ? param7 : Type.Missing;
+            this.param8 = CheckString(param8) ? param8 : Type.Missing;
+            this.param9 = CheckString(param9) ? param9 : Type.Missing;
+            this.param10 = CheckString(param10) ? param10 : Type.Missing;
             Run();
         }
 
@@ -48,7 +43,7 @@ namespace RPAAction.Excel_CSO
         {
             base.Action();
             //运行宏
-            if (!CheckString(MacroName))
+            if (CheckString(FunctionName))
             {
                 wb.Activate();
                 try
@@ -59,7 +54,7 @@ namespace RPAAction.Excel_CSO
                 catch (System.Runtime.InteropServices.COMException come)
                 {
                     //插入VBA代码
-                    if (!CheckString(VBACode))
+                    if (CheckString(VBACode))
                     {
                         try
                         {
@@ -84,17 +79,9 @@ namespace RPAAction.Excel_CSO
 
         private void RunVBA()
         {
-            Ret = app.Run($@"'{wbFileName}'!{MacroName}",
-                params1 == null ? Type.Missing, params1,
-                params2 == null ? Type.Missing, params2,
-                params3 == null ? Type.Missing, params3,
-                params4 == null ? Type.Missing, params4,
-                params5 == null ? Type.Missing, params5,
-                params6 == null ? Type.Missing, params6,
-                params7 == null ? Type.Missing, params7,
-                params8 == null ? Type.Missing, params8,
-                params9 == null ? Type.Missing, params9,
-                params10 == null ? Type.Missing, params10
+            Ret = app.Run($@"'{wbFileName}'!{FunctionName}",
+                param1, param2, param3, param4, param5,
+                param6, param7, param8, param9, param10
             );
             if (Ret.StartsWith("Error"))
             {
@@ -103,17 +90,17 @@ namespace RPAAction.Excel_CSO
         }
 
         private readonly string VBACode = null;
-        private readonly string MacroName = null;
+        private readonly string FunctionName = null;
 
-        private readonly object params1;
-        private readonly object params2;
-        private readonly object params3;
-        private readonly object params4;
-        private readonly object params5;
-        private readonly object params6;
-        private readonly object params7;
-        private readonly object params8;
-        private readonly object params9;
-        private readonly object params10;
+        private readonly object param1;
+        private readonly object param2;
+        private readonly object param3;
+        private readonly object param4;
+        private readonly object param5;
+        private readonly object param6;
+        private readonly object param7;
+        private readonly object param8;
+        private readonly object param9;
+        private readonly object param10;
     }
 }
