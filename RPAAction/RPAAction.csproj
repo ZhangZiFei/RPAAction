@@ -146,6 +146,17 @@
     <Compile Include="Oledb CSO\GetAll.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPAAP\ForBluePrism.cs" />
+    <Compile Include="RPAAP\GlobalSuppressions.cs" />
+    <Compile Include="RPAAP\Param.cs" />
+    <Compile Include="RPAAP\RequestClient.cs" />
+    <Compile Include="RPAAP\RequestClientStd.cs" />
+    <Compile Include="RPAAP\RequestData.cs" />
+    <Compile Include="RPAAP\ResponseClient.cs" />
+    <Compile Include="RPAAP\ResponseClientStd.cs" />
+    <Compile Include="RPAAP\ResponseData.cs" />
+    <Compile Include="RPAAP\RPAAPException.cs" />
+    <Compile Include="RPAAP\Tool.cs" />
     <Compile Include="Tool\WindowEnumerator.cs" />
   </ItemGroup>
   <ItemGroup>
