@@ -14,18 +14,18 @@
 
         protected override void Action()
         {
-            if (CheckString(wbPath))
+            if (WbPath.CheckNoVoid())
             {
-                wb = AttachWorkbook(wbPath);
-                if (wb != null)
+                Wb = AttachWorkbook(WbPath);
+                if (Wb != null)
                 {
-                    wb.Close(isSave);
+                    Wb.Close(isSave);
                 }
             }
             else
             {
                 base.Action();
-                wb.Close(isSave);
+                Wb.Close(isSave);
             }
         }
 

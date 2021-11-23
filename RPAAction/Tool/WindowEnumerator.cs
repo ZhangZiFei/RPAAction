@@ -8,7 +8,7 @@ using System.Text;
 //https://blog.walterlv.com/post/enumerate-all-windows.html
 //https://github.com/walterlv/walterlv.demo/blob/master/Walterlv.WindowDetector/Walterlv.WindowDetector/WindowEnumerator.cs
 
-namespace RPAAction.Tool
+namespace Tool
 {
     /// <summary>
     /// 包含枚举当前用户空间下所有窗口的方法。

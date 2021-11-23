@@ -8,18 +8,18 @@
         public Range_Active(string wbPath = null, string wsName = null, string range = null)
             : base(wbPath, wsName)
         {
-            this.range = range;
+            this.Range = range;
             Run();
         }
 
         protected override void Action()
         {
             base.Action();
-            wb.Activate();
-            ws.Select();
-            if (range != null && (!range.Equals("")))
+            Wb.Activate();
+            Ws.Select();
+            if (Range != null && (!Range.Equals("")))
             {
-                app.Range[range].Select();
+                App.Range[Range].Select();
             }
         }
     }

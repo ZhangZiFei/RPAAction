@@ -15,22 +15,22 @@ namespace RPAAction.Excel_CSO
 
         protected override void Action()
         {
-            if (!CheckApp(app))
+            if (!App.Check())
             {
-                app = AttachApp();
+                App = AttachApp();
             }
-            while (app != null)
+            while (App != null)
             {
-                if (CheckApp(app))
+                if (App.Check())
                 {
                     //關閉應用和工作簿
-                    foreach (_Workbook item in app.Workbooks)
+                    foreach (_Workbook item in App.Workbooks)
                     {
                         item.Close(false);
                     }
                 }
-                KillApp(app);
-                app = AttachApp();
+                App.Kill();
+                App = AttachApp();
             }
         }
     }

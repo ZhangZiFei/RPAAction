@@ -14,7 +14,7 @@
         protected override void Action()
         {
             base.Action();
-            ws.Delete();
+            Ws.Delete();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace RPAAction.Access_CSO
 
         public static _Application GetApplication(string accessPath)
         {
-            if (CheckString(accessPath))
+            if (accessPath.CheckNoVoid())
             {
                 accessPath = System.IO.Path.GetFullPath(accessPath);
                 if (!apps.ContainsKey(accessPath))
@@ -50,7 +50,7 @@ namespace RPAAction.Access_CSO
         /// <param name="accessPath"></param>
         public static void ClearUp(string accessPath = null)
         {
-            if (CheckString(accessPath))
+            if (accessPath.CheckNoVoid())
             {
                 KillAccess(apps[accessPath]);
                 apps.Remove(accessPath);

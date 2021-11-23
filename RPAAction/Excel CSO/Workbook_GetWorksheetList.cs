@@ -20,7 +20,7 @@ namespace RPAAction.Excel_CSO
             base.Action();
             InitTable();
             _Worksheet _ws;
-            foreach (object ws in wb.Worksheets)
+            foreach (object ws in Wb.Worksheets)
             {
                 _ws = ws as _Worksheet;
                 if (_ws != null)

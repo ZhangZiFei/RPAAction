@@ -9,19 +9,6 @@ namespace RPAAction.Base
         /// </summary>
         public bool IsRan { get => isRan; }
 
-        public string EType { get => e == null ? "" : e.GetType().ToString(); }
-        public string EMes { get => e == null ? "" : e.ToString(); }
-
-        /// <summary>
-        /// 检查是不是有效字符串,如果是null或者空字符串则返回False
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static bool CheckString(string s)
-        {
-            return s != null && (!s.Equals(""));
-        }
-
         public RPAAction Run()
         {
             if (!isRan)
@@ -31,33 +18,12 @@ namespace RPAAction.Base
                     BeforeRun();
                     Action();
                 }
-#if !DEBUG
-                catch (Exception e)
-                {
-                    this.e = e;
-                }
-#endif
                 finally
                 {
-#if !DEBUG
-                    try
-                    {
-#endif
                         AfterRun();
-#if !DEBUG
-                    }
-                    catch (Exception) { }
-#endif
                 }
                 isRan = true;
             }
-            return this;
-        }
-
-        public RPAAction OutE(out string EType, out string EMes)
-        {
-            EType = this.EType;
-            EMes = this.EMes;
             return this;
         }
 
@@ -76,9 +42,5 @@ namespace RPAAction.Base
         }
 
         private bool isRan;
-#if DEBUG
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0044:添加只读修饰符", Justification = "<挂起>")]
-#endif
-        private Exception e = null;
     }
 }

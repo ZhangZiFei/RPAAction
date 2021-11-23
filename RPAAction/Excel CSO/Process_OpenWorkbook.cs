@@ -15,7 +15,7 @@ namespace RPAAction.Excel_CSO
         /// <param name="writeResPassword">写权限密码,有的工作簿是受到保护,需要密码才能回去写入权限</param>
         public Process_OpenWorkbook(string wbPath, bool readOnly = false, string pwd = null, string delimiter = null, string writePwd = null)
         {
-            this.wbPath = Path.GetFullPath(wbPath);
+            this.WbPath = Path.GetFullPath(wbPath);
             this.readOnly = readOnly;
             this.pwd = pwd;
             this.delimiter = delimiter;
@@ -25,15 +25,15 @@ namespace RPAAction.Excel_CSO
 
         protected override void Action()
         {
-            wb = AttachWorkbook(wbPath);
-            if (wb != null)
+            Wb = AttachWorkbook(WbPath);
+            if (Wb != null)
             {
                 AttachOrOpenApp();
-                bool Visible = app.Visible;
-                wb.Close(false);
-                app.Visible = Visible;
+                bool Visible = App.Visible;
+                Wb.Close(false);
+                App.Visible = Visible;
             }
-            wb = OpenWorkbook(wbPath, readOnly, pwd, delimiter, writePwd);
+            Wb = OpenWorkbook(WbPath, readOnly, pwd, delimiter, writePwd);
         }
 
         private readonly bool readOnly;

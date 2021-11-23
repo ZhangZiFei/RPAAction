@@ -25,17 +25,17 @@ namespace RPAAction.Excel_CSO
             : base(wbPath, wsName)
         {
             this.VBACode = VBACode;
-            this.FunctionName = CheckString(FunctionName) ? FunctionName : "f";
-            this.param1 = CheckString(param1) ? param1 : Type.Missing;
-            this.param2 = CheckString(param2) ? param2 : Type.Missing;
-            this.param3 = CheckString(param3) ? param3 : Type.Missing;
-            this.param4 = CheckString(param4) ? param4 : Type.Missing;
-            this.param5 = CheckString(param5) ? param5 : Type.Missing;
-            this.param6 = CheckString(param6) ? param6 : Type.Missing;
-            this.param7 = CheckString(param7) ? param7 : Type.Missing;
-            this.param8 = CheckString(param8) ? param8 : Type.Missing;
-            this.param9 = CheckString(param9) ? param9 : Type.Missing;
-            this.param10 = CheckString(param10) ? param10 : Type.Missing;
+            this.FunctionName = FunctionName.CheckNoVoid() ? FunctionName : "f";
+            this.param1 = param1.CheckNoVoid() ? param1 : Type.Missing;
+            this.param2 = param2.CheckNoVoid() ? param2 : Type.Missing;
+            this.param3 = param3.CheckNoVoid() ? param3 : Type.Missing;
+            this.param4 = param4.CheckNoVoid() ? param4 : Type.Missing;
+            this.param5 = param5.CheckNoVoid() ? param5 : Type.Missing;
+            this.param6 = param6.CheckNoVoid() ? param6 : Type.Missing;
+            this.param7 = param7.CheckNoVoid() ? param7 : Type.Missing;
+            this.param8 = param8.CheckNoVoid() ? param8 : Type.Missing;
+            this.param9 = param9.CheckNoVoid() ? param9 : Type.Missing;
+            this.param10 = param10.CheckNoVoid() ? param10 : Type.Missing;
             Run();
         }
 
@@ -43,9 +43,9 @@ namespace RPAAction.Excel_CSO
         {
             base.Action();
             //运行宏
-            if (CheckString(FunctionName))
+            if (FunctionName.CheckNoVoid())
             {
-                wb.Activate();
+                Wb.Activate();
                 try
                 {
                     RunVBA();
@@ -54,13 +54,13 @@ namespace RPAAction.Excel_CSO
                 catch (System.Runtime.InteropServices.COMException come)
                 {
                     //插入VBA代码
-                    if (CheckString(VBACode))
+                    if (VBACode.CheckNoVoid())
                     {
                         try
                         {
-                            VBE vbe = app.VBE;
+                            VBE vbe = App.VBE;
                             VBComponent vbComponent;
-                            vbComponent = wb.VBProject.VBComponents.Add(vbext_ComponentType.vbext_ct_StdModule);
+                            vbComponent = Wb.VBProject.VBComponents.Add(vbext_ComponentType.vbext_ct_StdModule);
                             vbComponent.CodeModule.AddFromString(VBACode);
                         }
                         catch (Exception e)
@@ -79,7 +79,7 @@ namespace RPAAction.Excel_CSO
 
         private void RunVBA()
         {
-            Ret = app.Run($@"'{wbFileName}'!{FunctionName}",
+            Ret = App.Run($@"'{WbFileName}'!{FunctionName}",
                 param1, param2, param3, param4, param5,
                 param6, param7, param8, param9, param10
             );

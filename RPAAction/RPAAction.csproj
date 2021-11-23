@@ -139,6 +139,7 @@
     <Compile Include="Excel CSO\Range_Active.cs" />
     <Compile Include="Excel CSO\Process_Close.cs" />
     <Compile Include="Excel CSO\ExcelAction.cs" />
+    <Compile Include="Excel CSO\WorkbookExpand.cs" />
     <Compile Include="Excel CSO\Workbook_Active.cs" />
     <Compile Include="Excel CSO\Workbook_CreateWorksheet.cs" />
     <Compile Include="Excel CSO\Workbook_DeleteWorksheet.cs" />
@@ -146,13 +147,14 @@
     <Compile Include="Excel CSO\Process_OpenWorkbook.cs" />
     <Compile Include="Excel CSO\Workbook_SaveAs.cs" />
     <Compile Include="Excel CSO\Worksheet_Active.cs" />
-    <Compile Include="EXE\DataAction.cs" />
+    <Compile Include="Excel CSO\ApplicationExpand.cs" />
     <Compile Include="Oledb CSO\AccessAction.cs" />
     <Compile Include="Oledb CSO\ExcelImportToOledb.cs" />
     <Compile Include="Oledb CSO\GetAc.cs" />
     <Compile Include="Oledb CSO\GetAll.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RPAAction.cs" />
     <Compile Include="RPAAP\ForBluePrism.cs" />
     <Compile Include="RPAAP\GlobalSuppressions.cs" />
     <Compile Include="RPAAP\Param.cs" />
@@ -164,6 +166,7 @@
     <Compile Include="RPAAP\ResponseData.cs" />
     <Compile Include="RPAAP\RPAAPException.cs" />
     <Compile Include="RPAAP\Tool.cs" />
+    <Compile Include="Tool\Tool.cs" />
     <Compile Include="Tool\WindowEnumerator.cs" />
   </ItemGroup>
   <ItemGroup>

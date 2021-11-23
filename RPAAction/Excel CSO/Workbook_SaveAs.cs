@@ -26,7 +26,7 @@ namespace RPAAction.Excel_CSO
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(newWbPath));
-            wb.SaveAs(newWbPath, GetXlFileFormatByWbPath(newWbPath));
+            Wb.SaveAs(newWbPath, GetXlFileFormatByWbPath(newWbPath));
         }
 
         private readonly string newWbPath = null;

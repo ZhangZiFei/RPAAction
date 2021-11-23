@@ -17,10 +17,10 @@ namespace RPAAction.Excel_CSO
         protected override void Action()
         {
             AttachApp();
-            if (app != null)
+            if (App != null)
             {
                 InitTable();
-                foreach (_Workbook wb in app.Workbooks)
+                foreach (_Workbook wb in App.Workbooks)
                 {
                     table.Rows.Add(wb.Name, wb.FullName);
                 }

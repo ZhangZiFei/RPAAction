@@ -11,7 +11,7 @@ namespace RPAAction.Excel_CSO
     {
         public Process_CreateWorkbook(string wbPath)
         {
-            this.wbPath = Path.GetFullPath(wbPath);
+            this.WbPath = Path.GetFullPath(wbPath);
             Run();
         }
 
@@ -19,14 +19,14 @@ namespace RPAAction.Excel_CSO
         {
             AttachOrOpenApp();
 
-            if (File.Exists(wbPath))
+            if (File.Exists(WbPath))
             {
-                throw new ActionException($"文件({wbPath})已经存在");
+                throw new ActionException($"文件({WbPath})已经存在");
             }
 
-            Directory.CreateDirectory(Path.GetDirectoryName(wbPath));
-            wb = app.Workbooks.Add();
-            wb.SaveAs(wbPath, GetXlFileFormatByWbPath(wbPath));
+            Directory.CreateDirectory(Path.GetDirectoryName(WbPath));
+            Wb = App.Workbooks.Add();
+            Wb.SaveAs(WbPath, GetXlFileFormatByWbPath(WbPath));
         }
     }
 }

@@ -5,7 +5,7 @@
     /// </summary>
     public class Workbook_CreateWorksheet : ExcelAction
     {
-        public new string wsName = null;
+        public string wsName = null;
 
         ///<param name="wsName">新工作表的名称,默认由Excel进程自动设置</param>
         /// <param name="position">新工作表的位置,默认0,正常范围是1到工作表的最大数量,正常范围之外视为最后一个位置</param>
@@ -25,32 +25,32 @@
         {
             base.Action();
             //Create Worksheet
-            if (CheckString(after))
+            if (after.CheckNoVoid())
             {
-                ws = wb.Worksheets.Add(After: wb.Worksheets[after]);
+                Ws = Wb.Worksheets.Add(After: Wb.Worksheets[after]);
             }
-            else if (CheckString(before))
+            else if (before.CheckNoVoid())
             {
-                ws = wb.Worksheets.Add(Before: wb.Worksheets[before]);
+                Ws = Wb.Worksheets.Add(Before: Wb.Worksheets[before]);
             }
-            else if (position >= 1 && position <= wb.Sheets.Count)
+            else if (position >= 1 && position <= Wb.Sheets.Count)
             {
-                ws = wb.Worksheets.Add(Before: wb.Worksheets[position]);
+                Ws = Wb.Worksheets.Add(Before: Wb.Worksheets[position]);
             }
             else
             {
-                ws = wb.Worksheets.Add(After: wb.Worksheets[wb.Worksheets.Count]);
+                Ws = Wb.Worksheets.Add(After: Wb.Worksheets[Wb.Worksheets.Count]);
             }
             //wsName
-            if (CheckString(wsName))
+            if (wsName.CheckNoVoid())
             {
-                ws.Name = wsName;
+                Ws.Name = wsName;
             }
             else
             {
-                wsName = ws.Name;
+                wsName = Ws.Name;
             }
-            base.wsName = wsName;
+            base.WsName = wsName;
         }
 
         private readonly decimal position = 0;

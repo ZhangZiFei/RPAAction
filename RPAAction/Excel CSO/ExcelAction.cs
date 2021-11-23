@@ -10,106 +10,22 @@ namespace RPAAction.Excel_CSO
     public abstract class ExcelAction : Base.RPAAction
     {
         /// <summary>
-        /// 杀死Excel进程
-        /// </summary>
-        /// <param name="app"></param>
-        public static void KillApp(_Application app)
-        {
-            if (app == null)
-            {
-                return;
-            }
-            else
-            {
-                GetWindowThreadProcessId(new IntPtr(app.Hwnd), out uint processId);
-                app.Quit();
-                Process p = Process.GetProcessById((int)processId);
-                if (p.WaitForExit(100))
-                {
-                    return;
-                }
-                p.Kill();
-                p.WaitForExit(10000);
-            }
-        }
-
-        /// <summary>
-        /// 检测<see cref="_Application"/>实例是否可用,如果不可用则清理
-        /// </summary>
-        /// <returns>可用返回true,不可用返回false</returns>
-        public static bool CheckApp(_Application app)
-        {
-            if (app != null)
-            {
-                try
-                {
-                    app.Visible = app.Visible;
-                    return true;
-                }
-                catch (COMException)
-                {
-                    try { KillApp(app); } catch (Exception) { }
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// 设置Excel进程的显示状态
-        /// </summary>
-        public static void ShowApp(_Application app = null, bool b = true)
-        {
-            app = app ?? ExcelAction.app;
-            app.Visible = b;
-        }
-
-        /// <summary>
-        /// 处理<see cref="_Application"/>以适应自动化操作
-        /// </summary>
-        public static _Application ChangeAppForRPA(_Application app)
-        {
-            //禁止Excel进程的各种弹窗
-            app.DisplayAlerts = false;
-            //取消用户控制模式
-            app.UserControl = false;
-            //显示Excel窗口
-            app.Visible = true;
-            return app;
-        }
-
-        /// <summary>
-        /// 处理<see cref="_Application"/>以适应用户操作
-        /// </summary>
-        public static _Application ChangeAppForUser(_Application app)
-        {
-            //启用Excel进程的各种弹窗
-            app.DisplayAlerts = true;
-            //开启用户控制模式
-            app.UserControl = true;
-            ShowApp(app);
-            return app;
-        }
-
-        /// <summary>
-        /// 为RPA程式创建新的Excel进程,会改变<see cref="app"/>的指向
+        /// 为RPA程式创建新的Excel进程,会改变<see cref="App"/>
         /// </summary>
         /// <returns></returns>
         public static _Application CreateAppForRPA()
         {
-            app = new Application();
-            ChangeAppForRPA(app);
-            ShowApp(app);
-            return app;
+            return new Application().ChangeForRPA();
         }
 
         /// <summary>
-        /// 连接并且返回可用的<see cref="_Application"/>,如果连接失败返回null
+        /// 连接并且返回可用的<see cref="_Application"/>,如果连接失败返回null,可能会改变<see cref="App"/>
         /// </summary>
         public static _Application AttachApp()
         {
-            if (CheckApp(app))
+            if (App.Check())
             {
-                return ChangeAppForRPA(app);
+                return App;
             }
             else
             {
@@ -118,39 +34,30 @@ namespace RPAAction.Excel_CSO
                     try
                     {
                         //连接Excel进程
-                        app = (_Application)Marshal.GetActiveObject("Excel.Application");
+                        App = (_Application)Marshal.GetActiveObject("Excel.Application");
                     }
                     catch (COMException)
                     {
-                        app = null;
+                        App = null;
                         break;
                     }
-                } while (!CheckApp(app));
+                } while (!App.Check());
+                return App?.ChangeForRPA();
             }
-            return app == null ? null : ChangeAppForRPA(app);
         }
 
         /// <summary>
-        /// 链接或者打开<see cref="_Application"/>
+        /// 链接或者打开<see cref="_Application"/>,可能会改变<see cref="App"/>
         /// </summary>
         /// <returns></returns>
         public static _Application AttachOrOpenApp()
         {
             AttachApp();
-            return app ?? CreateAppForRPA();
+            return App ?? CreateAppForRPA();
         }
 
         /// <summary>
-        /// 处理<see cref="_Workbook"/>以适应自动化操作
-        /// </summary>
-        public static void ChangeWorkbookForRPA(_Workbook wb)
-        {
-            wb.CheckCompatibility = false;//控制兼容性检查器运行自动保存工作簿时。 为可读/写属性。
-            wb.UpdateLinks = XlUpdateLinks.xlUpdateLinksNever;//禁止更新链接
-        }
-
-        /// <summary>
-        /// 连接工作簿,如果失败则返回null,可能会改变<see cref="app"/>的指向
+        /// 连接工作簿,如果失败则返回null,可能会改变<see cref="App"/>
         /// </summary>
         public static _Workbook AttachWorkbook(string wbPath)
         {
@@ -167,40 +74,34 @@ namespace RPAAction.Excel_CSO
                 }
             }
 
-            if (wb != null)
-            {
-                ChangeWorkbookForRPA(wb);
-            }
-
-            return wb;
+            return wb?.ChangeForRPA();
         }
 
         /// <summary>
-        /// 打开工作簿
+        /// 打开工作簿,可能会改变<see cref="App"/>
         /// </summary>
         public static _Workbook OpenWorkbook(string wbPath, bool readOnly = false, string pwd = null, string delimiter = null, string writePwd = null)
         {
             AttachOrOpenApp();
             wbPath = Path.GetFullPath(wbPath);
-            _Workbook wb = app.Workbooks.Open(
+            _Workbook wb = App.Workbooks.Open(
                 wbPath,
                 XlUpdateLinks.xlUpdateLinksNever,
                 readOnly,
-                CheckString(delimiter) ? delimiter : Type.Missing,
-                CheckString(pwd) ? pwd : Type.Missing,
-                CheckString(writePwd) ? writePwd : Type.Missing,
+                delimiter.CheckNoVoid() ? delimiter : Type.Missing,
+                pwd.CheckNoVoid() ? pwd : Type.Missing,
+                writePwd.CheckNoVoid() ? writePwd : Type.Missing,
                 true,//则不让 Microsoft Excel 显示只读的建议消息
                 Type.Missing,
-                CheckString(delimiter) ? 6 : Type.Missing,
+                delimiter.CheckNoVoid() ? 6 : Type.Missing,
                 false,//则加载项将以隐藏方式打开
                 false//当文件不能以可读写模式打开时,不会请求通知，并且任何打开不可用文件的尝试都将失败。
             );
-            ChangeWorkbookForRPA(wb);
-            return wb;
+            return wb.ChangeForRPA();
         }
 
         /// <summary>
-        /// 连接或者打开新的Excel,可能会改变<see cref="app"/>的指向
+        /// 连接或者打开新的Excel,可能会改变<see cref="App"/>
         /// </summary>
         /// <param name="wbPath"></param>
         /// <param name="readOnly"></param>
@@ -215,7 +116,7 @@ namespace RPAAction.Excel_CSO
         }
 
         /// <summary>
-        /// 目前支持xlsx,xls,csv,html,txt,xml,dif除此之外默认txt
+        /// 目前支持xlsx,xlsb,xls,csv,html,txt,xml,dif除此之外默认txt
         /// </summary>
         /// <param name="wbPath"></param>
         /// <returns></returns>
@@ -248,10 +149,10 @@ namespace RPAAction.Excel_CSO
             }
         }
 
-        public static Range Range(_Worksheet ws, string range)
+        public static Range GetRange(_Worksheet ws, string range)
         {
             Range R = null;
-            if (CheckString(range))
+            if (range.CheckNoVoid())
             {
                 switch (range)
                 {
@@ -259,13 +160,13 @@ namespace RPAAction.Excel_CSO
                         R = ws.UsedRange;
                         break;
                     default:
-                        R = app.Range[range];
+                        R = App.Range[range];
                         break;
                 }
             }
             else
             {
-                dynamic r = app.Selection;
+                dynamic r = App.Selection;
                 if (r is Range)
                 {
                     R = r;
@@ -279,10 +180,9 @@ namespace RPAAction.Excel_CSO
         public ExcelAction(string wbPath = null, string wsName = null, string range = null)
             : base()
         {
-            this.wbPath = wbPath;
-            wbFileName = CheckString(wbPath) ? null : Path.GetFileName(wbPath);
-            this.wsName = wsName;
-            this.range = range;
+            WbPath = wbPath;
+            WsName = wsName;
+            Range = range;
         }
 
         //---------- protected ----------
@@ -290,37 +190,48 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 工作簿路径
         /// </summary>
-        protected string wbPath = null;
+        protected string WbPath
+        {
+            get
+            {
+                return wbPath;
+            }
+            set
+            {
+                wbPath = Path.GetFullPath(value);
+                wbFileName = Path.GetFileName(value);
+            }
+        }
 
         /// <summary>
         /// 工作簿文件名(带后缀)
         /// </summary>
-        protected string wbFileName = null;
+        protected string WbFileName => wbFileName;
 
         /// <summary>
         /// 工作表名称
         /// </summary>
-        protected string wsName = null;
+        protected string WsName = null;
 
         /// <summary>
         /// 单元格名称
         /// </summary>
-        protected string range = null;
+        protected string Range = null;
 
         /// <summary>
-        /// Excel应用,在<see cref="ExcelAction"/>中,任何对不是当前<see cref="app"/>或其子属性的操作都将指向新的<see cref="_Application"/>,
+        /// Excel应用,在<see cref="ExcelAction"/>中,任何对不是当前<see cref="App"/>或其子属性的操作都将指向新的<see cref="_Application"/>,
         /// </summary>
-        protected static _Application app = null;
+        protected static _Application App = null;
 
         /// <summary>
         /// 工作簿
         /// </summary>
-        protected _Workbook wb = null;
+        protected _Workbook Wb = null;
 
         /// <summary>
         /// 工作表
         /// </summary>
-        protected _Worksheet ws = null;
+        protected _Worksheet Ws = null;
 
 
         /// <summary>
@@ -339,153 +250,162 @@ namespace RPAAction.Excel_CSO
         protected bool CreateWorksheet = false;
 
         /// <summary>
-        /// <see cref="app"/>是否由当前的Action打开
+        /// <see cref="App"/>是否由当前的Action打开
         /// </summary>
         protected bool isOpenApp = false;
 
         /// <summary>
-        /// <see cref="wb"/>是否由当前Action打开
+        /// <see cref="Wb"/>是否由当前Action打开
         /// </summary>
         protected bool isOpenWorkbook = false;
 
         /// <summary>
-        /// <see cref="wb"/>是否由当前Action创建
+        /// <see cref="Wb"/>是否由当前Action创建
         /// </summary>
         protected bool isCreateWorkbook = false;
 
         /// <summary>
-        /// <see cref="ws"/>是否由当前Action创建
+        /// <see cref="Ws"/>是否由当前Action创建
         /// </summary>
         protected bool isCreateWorksheet = false;
 
         /// <summary>
-        /// 自动连接或者打开Excel,自动获取<see cref="app"/>,<see cref="wb"/>和<see cref="ws"/>
+        /// 自动连接或者打开Excel,自动获取<see cref="App"/>,<see cref="Wb"/>和<see cref="Ws"/>
         /// </summary>
         protected override void Action()
         {
-            GetWorkbook();
-            GetSheet();
-            GetR();
+            SetWorkbook();
+            SetSheet();
+            SetR();
         }
 
         protected override void AfterRun()
         {
             base.AfterRun();
 
-            if (CheckApp(app) && app.Visible == true)
+            //如果Excel进程有效且处于显示状态则切换为用户模式
+            if (App.Check() && App.Visible == true)
             {
-                ChangeAppForUser(app);
+                App.ChangeForUser();
             }
         }
 
         /// <summary>
-        /// 自动设置<see cref="wb"/>
+        /// 自动设置<see cref="Wb"/>
         /// </summary>
-        protected void GetWorkbook()
+        protected void SetWorkbook()
         {
             isOpenApp = AttachApp() != null;
-            if (CheckString(wbPath))
+            if (WbPath.CheckNoVoid())
             {
-                if (File.Exists(wbPath))
+                if (File.Exists(WbPath))
                 {
-                    wb = AttachWorkbook(wbPath);
-                    if (wb == null)
+                    Wb = AttachWorkbook(WbPath);
+                    if (Wb == null)
                     {
-                        wb = OpenWorkbook(wbPath);
+                        Wb = OpenWorkbook(WbPath);
                         isOpenWorkbook = true;
                     }
-                    wbFileName = Path.GetFileName(wbPath);
                 }
                 else if (CreateWorkbook)
                 {
-                    wb = new Process_CreateWorkbook(wbPath).wb;
+                    Wb = new Process_CreateWorkbook(WbPath).Wb;
                     isOpenWorkbook = true;
                     isCreateWorkbook = true;
                 }
                 else
                 {
-                    throw new ActionException($"文件({wbPath})不存在");
+                    throw new ActionException($"文件({WbPath})不存在");
                 }
             }
             else
             {
                 AttachOrOpenApp();
-                if (app.Workbooks.Count > 0)
+                if (App.Workbooks.Count > 0)
                 {
-                    wb = app.ActiveWorkbook;
-                    wbPath = wb.FullName;
-                    wbFileName = Path.GetFileName(wbPath);
+                    Wb = App.ActiveWorkbook;
+                    WbPath = Wb.FullName;
                 }
                 else
                 {
                     throw new ActionException("找不到活动工作簿");
                 }
             }
-            wb.Activate();
+            Wb.Activate();
         }
 
         /// <summary>
-        /// 自动设置<see cref="ws"/>
+        /// 自动设置<see cref="Ws"/>
         /// </summary>
-        protected void GetSheet()
+        protected void SetSheet()
         {
             if (isCreateWorkbook)
             {
-                ws = wb.Worksheets[1];
-                if (CheckString(wsName))
+                Ws = Wb.Worksheets[1];
+                if (WsName.CheckNoVoid())
                 {
-                    ws.Name = wsName;
+                    Ws.Name = WsName;
                 }
                 else
                 {
-                    wsName = ws.Name;
+                    WsName = Ws.Name;
                 }
                 //删除其他的工作表
-                while (wb.Worksheets.Count > 1)
+                while (Wb.Worksheets.Count > 1)
                 {
-                    _Worksheet worksheet = wb.Worksheets[2];
-                    if (!worksheet.Name.Equals(wsName))
+                    _Worksheet worksheet = Wb.Worksheets[2];
+                    if (!worksheet.Name.Equals(WsName))
                     {
                         worksheet.Delete();
                     }
                 }
             }
-            else if (CheckString(wsName))
+            else if (WsName.CheckNoVoid())
             {
                 try
                 {
-                    ws = wb.Worksheets[wsName];
+                    Ws = Wb.Worksheets[WsName];
                 }
                 catch (COMException)
                 {
                     if (CreateWorksheet)
                     {
-                        ws = new Workbook_CreateWorksheet(wbPath, wsName).ws;
+                        Ws = new Workbook_CreateWorksheet(WbPath, WsName).Ws;
                         isCreateWorksheet = true;
                     }
                     else
                     {
-                        throw new ActionException($"在工作簿({wbPath})中没有找到工作表({wsName})");
+                        throw new ActionException($"在工作簿({WbPath})中没有找到工作表({WsName})");
                     }
                 }
             }
             else
             {
-                ws = wb.ActiveSheet;
-                wsName = ws.Name;
+                Ws = Wb.ActiveSheet;
+                WsName = Ws.Name;
             }
-            ws.Activate();
+            Ws.Activate();
         }
 
         /// <summary>
         /// 自动设置<see cref="R"/>
         /// </summary>
-        protected void GetR()
+        protected void SetR()
         {
-            R = Range(ws, range);
+            R = GetRange(Ws, Range);
         }
 
         //---------- private ----------
+
+        /// <summary>
+        /// 工作簿路径
+        /// </summary>
+        private string wbPath = null;
+
+        /// <summary>
+        /// 工作簿文件名(带后缀)
+        /// </summary>
+        private string wbFileName = null;
 
         /// <summary>
         /// Workbook连接方案一
@@ -497,7 +417,7 @@ namespace RPAAction.Excel_CSO
             string wbFileName = Path.GetFileName(wbPath);
             try
             {
-                wb = app.Workbooks[wbFileName];
+                wb = App.Workbooks[wbFileName];
             }
             catch (Exception) { }
             if (wb != null)

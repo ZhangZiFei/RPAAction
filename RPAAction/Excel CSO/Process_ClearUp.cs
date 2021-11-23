@@ -17,7 +17,7 @@ namespace RPAAction.Excel_CSO
         {
             if (AttachApp() != null)
             {
-                ChangeAppForUser(app);
+                App.ChangeForUser();
             }
         }
     }
