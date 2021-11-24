@@ -18,6 +18,8 @@ namespace RPAAP
             {
                 switch (type)
                 {
+                    case "Boolean":
+                        return Boolean;
                     case "Decimal":
                         return Decimal;
                     case "String":
@@ -34,6 +36,13 @@ namespace RPAAP
         /// RPA 参数类型
         /// </summary>
         public string Type => type;
+
+        /// <param name="value">参数值</param>
+        public Param(bool value)
+        {
+            type = "Decimal";
+            Boolean = value;
+        }
 
         /// <param name="value">参数值</param>
         public Param(decimal value)
@@ -57,9 +66,10 @@ namespace RPAAP
         }
 
         [JsonConstructor]
-        protected Param(string type, decimal Decimal, string String, DataTable DataTable)
+        protected Param(bool Boolean, string type, decimal Decimal, string String, DataTable DataTable)
         {
             this.type = type;
+            this.Boolean = Boolean;
             this.Decimal = Decimal;
             this.String = String;
             this.DataTable = DataTable;
@@ -67,6 +77,9 @@ namespace RPAAP
 
         [JsonProperty]
         private readonly string type;
+
+        [JsonProperty]
+        private readonly bool Boolean = false;
 
         [JsonProperty]
         private readonly decimal Decimal = 0;
