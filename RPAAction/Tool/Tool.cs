@@ -1,9 +1,17 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace RPAAction
 {
     static class Tool
     {
+        /// <summary>
+        /// 版本号
+        /// </summary>
+        public static Version Version => version;
+        public const string Version_s = "0.1.1.2";
+        private static readonly Version version = new Version(Version_s);
+
         /// <summary>
         /// 检查是不是有效字符串,如果是null或者空字符串则返回False
         /// </summary>
