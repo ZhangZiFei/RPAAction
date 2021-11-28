@@ -15,7 +15,8 @@ namespace RPAAction.Excel_CSO
         /// <returns></returns>
         public static _Application CreateAppForRPA()
         {
-            return new Application().ChangeForRPA();
+            App = new Application().ChangeForRPA();
+            return App;
         }
 
         /// <summary>
@@ -116,6 +117,59 @@ namespace RPAAction.Excel_CSO
         }
 
         /// <summary>
+        /// 创建工作簿
+        /// </summary>
+        /// <param name="wbPath"></param>
+        /// <returns></returns>
+        public static _Workbook CreateWorkbook(string wbPath)
+        {
+            AttachOrOpenApp();
+
+            if (File.Exists(wbPath))
+            {
+                throw new ActionException($"文件({wbPath})已经存在");
+            }
+
+            _Workbook wb;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(wbPath));
+            wb = App.Workbooks.Add();
+            wb.SaveAs(wbPath, GetXlFileFormatByWbPath(wbPath));
+            return wb;
+        }
+
+        /// <summary>
+        /// 创建工作表
+        /// </summary>
+        ///<param name="wsName">新工作表的名称,默认由Excel进程自动设置</param>
+        /// <param name="position">新工作表的位置,默认0,正常范围是1到工作表的最大数量,正常范围之外视为最后一个位置</param>
+        /// <param name="before">提供一个工作表名称,新工作表创建在该工作表之前,如果提供此参数将无视参数"position"</param>
+        /// <param name="after">提供一个工作表名称,新工作表创建在该工作表之后,如果提供此参数将无视参数"position"和"before"</param>
+        /// <returns></returns>
+        public static _Worksheet CreateWorksheet(_Workbook wb, string wsName = null, decimal position = 0, string before = null, string after = null)
+        {
+            _Worksheet ws;
+            if (after.CheckNoVoid())
+            {
+                ws = wb.Worksheets.Add(After: wb.Worksheets[after]);
+            }
+            else if (before.CheckNoVoid())
+            {
+                ws = wb.Worksheets.Add(Before: wb.Worksheets[before]);
+            }
+            else if (position >= 1 && position <= wb.Sheets.Count)
+            {
+                ws = wb.Worksheets.Add(Before: wb.Worksheets[position]);
+            }
+            else
+            {
+                ws = wb.Worksheets.Add(After: wb.Worksheets[wb.Worksheets.Count]);
+            }
+            ws.Name = wsName;
+            return ws;
+        }
+
+        /// <summary>
         /// 目前支持xlsx,xlsb,xls,csv,html,txt,xml,dif除此之外默认txt
         /// </summary>
         /// <param name="wbPath"></param>
@@ -194,24 +248,48 @@ namespace RPAAction.Excel_CSO
         {
             get
             {
-                return wbPath;
+                return Wb == null ? wbPath : Wb.FullName;
             }
             set
             {
-                wbPath = Path.GetFullPath(value);
-                wbFileName = Path.GetFileName(value);
+                if (value.CheckNoVoid())
+                {
+                    wbPath = Path.GetFullPath(value);
+                    wbFileName = Path.GetFileName(value);
+                }
+                else
+                {
+                    wbPath = value;
+                    wbFileName = value;
+                }
             }
         }
 
         /// <summary>
         /// 工作簿文件名(带后缀)
         /// </summary>
-        protected string WbFileName => wbFileName;
+        protected string WbFileName
+        {
+            get
+            {
+                return Wb == null ? wbFileName : Wb.Name;
+            }
+        }
 
         /// <summary>
         /// 工作表名称
         /// </summary>
-        protected string WsName = null;
+        protected string WsName
+        {
+            get
+            {
+                return Ws == null ? wsName : Ws.Name;
+            }
+            set
+            {
+                wsName = value;
+            }
+        }
 
         /// <summary>
         /// 单元格名称
@@ -231,8 +309,18 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 工作表
         /// </summary>
-        protected _Worksheet Ws = null;
-
+        protected _Worksheet Ws
+        {
+            get => ws;
+            set
+            {
+                ws = value;
+                if (wsName.CheckNoVoid() && (!ws.Name.Equals(wsName)))
+                {
+                    ws.Name = wsName;
+                }
+            }
+        }
 
         /// <summary>
         /// 单元格
@@ -242,12 +330,12 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 是否需要主動創建工作簿
         /// </summary>
-        protected bool CreateWorkbook = false;
+        protected bool AutoCreateWorkbook = false;
 
         /// <summary>
         /// 是否需要主動創建工作表
         /// </summary>
-        protected bool CreateWorksheet = false;
+        protected bool AutoCreateWorksheet = false;
 
         /// <summary>
         /// <see cref="App"/>是否由当前的Action打开
@@ -274,8 +362,8 @@ namespace RPAAction.Excel_CSO
         /// </summary>
         protected override void Action()
         {
-            SetWorkbook();
-            SetSheet();
+            SetWb();
+            SetWs();
             SetR();
         }
 
@@ -293,9 +381,9 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 自动设置<see cref="Wb"/>
         /// </summary>
-        protected void SetWorkbook()
+        protected void SetWb()
         {
-            isOpenApp = AttachApp() != null;
+            isOpenApp = AttachApp() == null;
             if (WbPath.CheckNoVoid())
             {
                 if (File.Exists(WbPath))
@@ -307,9 +395,9 @@ namespace RPAAction.Excel_CSO
                         isOpenWorkbook = true;
                     }
                 }
-                else if (CreateWorkbook)
+                else if (AutoCreateWorkbook)
                 {
-                    Wb = new Process_CreateWorkbook(WbPath).Wb;
+                    Wb = CreateWorkbook(WbPath);
                     isOpenWorkbook = true;
                     isCreateWorkbook = true;
                 }
@@ -324,7 +412,6 @@ namespace RPAAction.Excel_CSO
                 if (App.Workbooks.Count > 0)
                 {
                     Wb = App.ActiveWorkbook;
-                    WbPath = Wb.FullName;
                 }
                 else
                 {
@@ -337,19 +424,10 @@ namespace RPAAction.Excel_CSO
         /// <summary>
         /// 自动设置<see cref="Ws"/>
         /// </summary>
-        protected void SetSheet()
+        protected void SetWs()
         {
             if (isCreateWorkbook)
             {
-                Ws = Wb.Worksheets[1];
-                if (WsName.CheckNoVoid())
-                {
-                    Ws.Name = WsName;
-                }
-                else
-                {
-                    WsName = Ws.Name;
-                }
                 //删除其他的工作表
                 while (Wb.Worksheets.Count > 1)
                 {
@@ -359,6 +437,8 @@ namespace RPAAction.Excel_CSO
                         worksheet.Delete();
                     }
                 }
+
+                Ws = Wb.Worksheets[1];
             }
             else if (WsName.CheckNoVoid())
             {
@@ -368,9 +448,9 @@ namespace RPAAction.Excel_CSO
                 }
                 catch (COMException)
                 {
-                    if (CreateWorksheet)
+                    if (AutoCreateWorksheet)
                     {
-                        Ws = new Workbook_CreateWorksheet(WbPath, WsName).Ws;
+                        ws = CreateWorksheet(Wb, WsName);
                         isCreateWorksheet = true;
                     }
                     else
@@ -382,7 +462,6 @@ namespace RPAAction.Excel_CSO
             else
             {
                 Ws = Wb.ActiveSheet;
-                WsName = Ws.Name;
             }
             Ws.Activate();
         }
@@ -406,6 +485,16 @@ namespace RPAAction.Excel_CSO
         /// 工作簿文件名(带后缀)
         /// </summary>
         private string wbFileName = null;
+
+        /// <summary>
+        /// 工作表名称
+        /// </summary>
+        private string wsName = null;
+
+        /// <summary>
+        /// 工作表
+        /// </summary>
+        private _Worksheet ws = null;
 
         /// <summary>
         /// Workbook连接方案一

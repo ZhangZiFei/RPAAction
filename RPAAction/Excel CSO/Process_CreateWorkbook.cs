@@ -11,22 +11,13 @@ namespace RPAAction.Excel_CSO
     {
         public Process_CreateWorkbook(string wbPath)
         {
-            this.WbPath = Path.GetFullPath(wbPath);
+            WbPath = wbPath;
             Run();
         }
 
         protected override void Action()
         {
-            AttachOrOpenApp();
-
-            if (File.Exists(WbPath))
-            {
-                throw new ActionException($"文件({WbPath})已经存在");
-            }
-
-            Directory.CreateDirectory(Path.GetDirectoryName(WbPath));
-            Wb = App.Workbooks.Add();
-            Wb.SaveAs(WbPath, GetXlFileFormatByWbPath(WbPath));
+            CreateWorkbook(WbPath);
         }
     }
 }

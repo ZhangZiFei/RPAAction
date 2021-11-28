@@ -20,7 +20,7 @@ namespace RPAAction.Base
                 }
                 finally
                 {
-                        AfterRun();
+                    AfterRun();
                 }
                 isRan = true;
             }
@@ -36,6 +36,7 @@ namespace RPAAction.Base
         {
 
         }
+
         protected virtual void AfterRun()
         {
 

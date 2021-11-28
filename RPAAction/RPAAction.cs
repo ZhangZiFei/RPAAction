@@ -45,7 +45,7 @@ namespace RPAAction
                                     requestData.InputParams["ExcelPath"].Value as string,
                                     requestData.InputParams["Sheet"].Value as string,
                                     requestData.InputParams["range"].Value as string,
-                                    ((string)requestData.InputParams["withTitle"].Value).ToLower().Equals("true")
+                                    (bool)requestData.InputParams["withTitle"].Value
                                 )
                             );
                             return new ResponseData(new Dictionary<string, Param>());

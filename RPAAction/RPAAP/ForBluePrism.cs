@@ -12,9 +12,11 @@ using System.Text;
 /// </summary>
 namespace ForBluePrism
 {
+    //https://github.com/ZhangZiFei/RPAAP/tree/master/RPAAP
     static class Tool
     {
-        public static string ExePath = @"E:\zifeiobject\RPAAP\RPAAP\bin\Debug\ResponseClientStdTest.exe";
+        public static string ExePath = @"D:\RPAAction\RPAAction.exe";
+        //public static string ExePath = @"E:\zifeiobject\RPAAP\RPAAP\bin\Debug\ResponseClientStdTest.exe";
         public static RequestClientStd R
         {
             get
@@ -66,6 +68,8 @@ namespace ForBluePrism
             {
                 switch (type)
                 {
+                    case "Boolean":
+                        return Boolean;
                     case "Decimal":
                         return Decimal;
                     case "String":
@@ -82,6 +86,13 @@ namespace ForBluePrism
         /// RPA 参数类型
         /// </summary>
         public string Type => type;
+
+        /// <param name="value">参数值</param>
+        public Param(bool value)
+        {
+            type = "Boolean";
+            Boolean = value;
+        }
 
         /// <param name="value">参数值</param>
         public Param(decimal value)
@@ -105,9 +116,10 @@ namespace ForBluePrism
         }
 
         [JsonConstructor]
-        protected Param(string type, decimal Decimal, string String, DataTable DataTable)
+        protected Param(bool Boolean, string type, decimal Decimal, string String, DataTable DataTable)
         {
             this.type = type;
+            this.Boolean = Boolean;
             this.Decimal = Decimal;
             this.String = String;
             this.DataTable = DataTable;
@@ -115,6 +127,9 @@ namespace ForBluePrism
 
         [JsonProperty]
         private readonly string type;
+
+        [JsonProperty]
+        private readonly bool Boolean = false;
 
         [JsonProperty]
         private readonly decimal Decimal = 0;

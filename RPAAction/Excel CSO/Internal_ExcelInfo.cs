@@ -15,8 +15,8 @@ namespace RPAAction.Excel_CSO
         public Internal_ExcelInfo(string wbPath = null, string wsName = null, string range = null, bool CreateWorkbook = false, bool CreateWorksheet = false)
             : base(wbPath, wsName, range)
         {
-            this.CreateWorkbook = CreateWorkbook;
-            this.CreateWorksheet = CreateWorksheet;
+            AutoCreateWorkbook = CreateWorkbook;
+            AutoCreateWorksheet = CreateWorksheet;
             Run();
         }
 
