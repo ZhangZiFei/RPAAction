@@ -7,11 +7,11 @@ namespace RPAAction.Base
         /// <summary>
         /// 该<see cref="Base.RPAAction"/>是否已经运行过
         /// </summary>
-        public bool IsRan { get => isRan; }
+        public bool IsRun { get => isRun; }
 
         public RPAAction Run()
         {
-            if (!isRan)
+            if (!isRun)
             {
                 try
                 {
@@ -22,7 +22,7 @@ namespace RPAAction.Base
                 {
                     AfterRun();
                 }
-                isRan = true;
+                isRun = true;
             }
             return this;
         }
@@ -42,6 +42,6 @@ namespace RPAAction.Base
 
         }
 
-        private bool isRan;
+        private bool isRun;
     }
 }

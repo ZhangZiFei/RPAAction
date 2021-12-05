@@ -10,6 +10,8 @@ namespace RPAAction.Data_CSO
         public override bool IsClosed => isClosed;
 
         public override int FieldCount => _FieldCount;
+        public override bool HasRows => _RowCont > 0;
+
 
         /// <param name="ExcelPath"></param>
         /// <param name="Sheet"></param>

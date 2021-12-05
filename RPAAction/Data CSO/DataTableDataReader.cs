@@ -9,6 +9,8 @@ namespace RPAAction.Data_CSO
             this.table = table;
         }
 
+        public override bool HasRows => table.Rows.Count > 0;
+
         public override int FieldCount => table.Columns.Count;
 
         public override bool IsClosed => true;

@@ -12,12 +12,16 @@ namespace RPAAction.Excel_CSO
         /// <param name="wsName">工作表名称, 如果为空视为获取活动工作表</param>
         /// <param name="CreateWorkbook">是否需要主動創建工作簿</param>
         /// <param name="CreateWorksheet">是否需要主動創建工作表</param>
-        public Internal_ExcelInfo(string wbPath = null, string wsName = null, string range = null, bool CreateWorkbook = false, bool CreateWorksheet = false)
+        /// <param name="run">是否立即执行副作用代码</param>
+        public Internal_ExcelInfo(string wbPath = null, string wsName = null, string range = null, bool CreateWorkbook = false, bool CreateWorksheet = false, bool run = true)
             : base(wbPath, wsName, range)
         {
             AutoCreateWorkbook = CreateWorkbook;
             AutoCreateWorksheet = CreateWorksheet;
-            Run();
+            if (run)
+            {
+                Run();
+            }
         }
 
         public new _Application App => ExcelAction.App;

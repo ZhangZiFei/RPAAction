@@ -54,7 +54,14 @@ namespace RPAAction.Data_CSO
         {
             try
             {
-                CreateTable(reader);
+                if (reader.HasRows)
+                {
+                    CreateTable(reader);
+                }
+                else
+                {
+                    return;
+                }
             }
             catch (Exception e)
             {

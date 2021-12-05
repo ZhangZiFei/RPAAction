@@ -95,8 +95,17 @@
     <Reference Include="Microsoft.Vbe.Interop, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NSAPConnector, Version=1.0.2.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\NSapConnector.3.0.0\lib\NSAPConnector.dll</HintPath>
+    </Reference>
+    <Reference Include="sapnco, Version=3.0.0.42, Culture=neutral, PublicKeyToken=50436dca5c7f7d23, processorArchitecture=AMD64">
+      <HintPath>..\packages\NSapConnector.3.0.0\lib\sapnco.dll</HintPath>
+    </Reference>
+    <Reference Include="sapnco_utils, Version=3.0.0.42, Culture=neutral, PublicKeyToken=50436dca5c7f7d23, processorArchitecture=AMD64">
+      <HintPath>..\packages\NSapConnector.3.0.0\lib\sapnco_utils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -119,8 +128,11 @@
     <Compile Include="Access CSO\Sql_GetAll.cs" />
     <Compile Include="Base\Action.cs" />
     <Compile Include="Base\ActionException.cs" />
+    <Compile Include="CSRFC\CSRFC.cs" />
+    <Compile Include="CSRFC\IRfcTableRPADataReader.cs" />
     <Compile Include="Data CSO\AccessDataImport.cs" />
     <Compile Include="Data CSO\AccessDataReader.cs" />
+    <Compile Include="Data CSO\TXTDataImport.cs" />
     <Compile Include="Data CSO\DataAction.cs" />
     <Compile Include="Data CSO\DataTableDataImport.cs" />
     <Compile Include="Data CSO\DataTableDataReader.cs" />
@@ -180,7 +192,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ReadMe.txt" />
     <Content Include="RoboticArm.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,12 +7,21 @@ namespace RPAAction.Data_CSO
 {
     public class SQLServerDataImport : RPADataImport
     {
-        public SQLServerDataImport(string DataSource, string DataBase, string user, string pwd, string table)
+        /// <param name="DataSource"></param>
+        /// <param name="DataBase"></param>
+        /// <param name="user"></param>
+        /// <param name="pwd"></param>
+        /// <param name="table"></param>
+        /// <param name="appand">是否附加数据默认true,否则清空表</param>
+        /// <param name="bulkCopyTimeout"></param>
+        public SQLServerDataImport(string DataSource, string DataBase, string user, string pwd, string table, bool appand = true, int bulkCopyTimeout = 600)
         {
             connStr = $@"Data Source={DataSource};Initial Catalog={DataBase};User ID={user};Pwd={pwd};";
             conn = new SqlConnection(connStr);
             conn.Open();
             tableName = table;
+            BulkCopyTimeout = bulkCopyTimeout;
+            this.appand = appand;
         }
 
         public SQLServerDataImport(string connStr, string table)
@@ -33,16 +42,28 @@ namespace RPAAction.Data_CSO
         {
             try
             {
-                CreateTable(reader);
+                if (reader.HasRows)
+                {
+                    CreateTable(reader);
+                }
+                else
+                {
+                    return;
+                }
             }
             catch (Exception e)
             {
                 if (e is ActionException)
                     throw e;
             }
-
+            if (!appand)
+            {
+                var cmd = new SqlCommand($"TRUNCATE TABLE [{tableName}];", conn);
+                cmd.ExecuteNonQuery();
+            }
             using (SqlBulkCopy bulkCopy = new SqlBulkCopy(conn))
             {
+                bulkCopy.BulkCopyTimeout = BulkCopyTimeout;
                 bulkCopy.DestinationTableName = tableName;
                 bulkCopy.WriteToServer(reader);
             }
@@ -75,5 +96,7 @@ namespace RPAAction.Data_CSO
 
         private readonly string connStr = null;
         private readonly SqlConnection conn;
+        private readonly int BulkCopyTimeout;
+        private readonly bool appand;
     }
 }

@@ -8,7 +8,7 @@ namespace RPAAction
     {
         static void Main()
         {
-            new RPAAction();
+            new RPAAction();//F();//
 
             /////////////////////////////////////////////////////////////////////////////////////////
             //Vba();
@@ -46,33 +46,16 @@ namespace RPAAction
                 )
             );
             //AccessAction.ClearUp();
-            new Excel_CSO.Process_Close();
+            new Process_Close();
         }
 
         public static void F()
         {
-            //单元格-读取集合 Range_WriteFromDataTable
-            var table = new System.Data.DataTable();
-            RPADataImport.ImportDispose(
-                new ExcelDataReader(
-                    "",
-                    "a"
-                ),
-                new DataTableDataImport(table)
-            );
-            //单元格 - 写入集合 Range_WriteToDataTable
-            RPADataImport.ImportDispose(
-                new DataTableDataReader(table),
-                new ExcelDataImport(
-                    "",
-                    "b"
-                )
-            );
         }
 
         public static void Vba()
         {
-            var a= new HighLevel_RunFunction(@"C:\Users\zhang\Desktop\a.xlsx", "", System.IO.File.ReadAllText(@"C:\Users\zhang\Downloads\a.vbs"), "f", "233");
+            var a= new HighLevel_RunFunction(@"C:\Users\zhang\Desktop\a.xlsx", "", System.IO.File.ReadAllText(@"a.vbs"), "f", "233");
             Console.WriteLine(a.Ret);
             new Process_Close();
         }

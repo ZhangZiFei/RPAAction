@@ -14,28 +14,32 @@ namespace RPAAction.Data_CSO
         /// <param name="MaxCashCount"></param>
         public ExcelDataImport(string ExcelPath = null, string Sheet = null, string range = "A1", bool withTitle = true, int MaxCashCount = 10000)
         {
-            eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range, true, true);
+            eInfo = new Internal_ExcelInfo(ExcelPath, Sheet, range, true, true, false);
             this.withTitle = withTitle;
             this.MaxCashCount = MaxCashCount;
         }
 
         protected override void Close()
         {
-            PushCash();
-            eInfo.Wb.Save();
-            if (eInfo.IsOpenWorkbook)
+            if (eInfo.IsRun)
             {
-                eInfo.Wb.Close();
-                if (eInfo.IsOpenApp)
+                PushCash();
+                eInfo.Wb.Save();
+                if (eInfo.IsOpenWorkbook)
                 {
-                    new Process_Close();
+                    eInfo.Wb.Close();
+                    if (eInfo.IsOpenApp)
+                    {
+                        new Process_Close();
+                    }
                 }
+                eInfo.Close();
             }
-            eInfo.Close();
         }
 
         protected override void CreateTable(DbDataReader r)
         {
+            eInfo.Run();
             FieldCount = r.FieldCount;
             range = eInfo.R.Resize[EachCashRow, FieldCount];
             cash = new object[EachCashRow, FieldCount];

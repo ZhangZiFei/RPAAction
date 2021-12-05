@@ -1,5 +1,6 @@
 ﻿using RPAAction.Access_CSO;
 using Microsoft.Office.Interop.Access.Dao;
+using System;
 
 namespace RPAAction.Data_CSO
 {
@@ -17,6 +18,23 @@ namespace RPAAction.Data_CSO
         public override int FieldCount => rd.Fields.Count;
 
         public override bool IsClosed => true;
+
+        public override bool HasRows
+        {
+            ///////待测试
+            get
+            {
+                try
+                {
+                    _ = rd.Fields[0].Value;
+                    return true;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+        }
 
         public override void Close()
         {

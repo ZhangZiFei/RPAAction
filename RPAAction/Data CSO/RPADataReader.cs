@@ -25,7 +25,7 @@ namespace RPAAction.Data_CSO
 
         //public override int FieldCount => throw new NotImplementedException();
 
-        public override bool HasRows => throw new NotImplementedException();
+        //public override bool HasRows => throw new NotImplementedException();
 
         public override bool IsClosed => throw new NotImplementedException();
 
