@@ -39,9 +39,9 @@ namespace RPAAction
                 //单元格-写入集合 Range_WriteToDataTable
                 else if (requestData.Action.Equals("Range_WriteToDataTable"))
                 {
-                    RPADataImport.ImportDispose(
+                    RPADataExport.ImportDispose(
                         new DataTableDataReader((System.Data.DataTable)requestData.InputParams["Table"].Value),
-                        new ExcelDataImport(
+                        new ExcelDataExport(
                             requestData.InputParams["ExcelPath"].Value as string,
                             requestData.InputParams["Sheet"].Value as string,
                             requestData.InputParams["range"].Value as string,
@@ -54,13 +54,13 @@ namespace RPAAction
                 else if (requestData.Action.Equals("Range_WriteToDataTable"))
                 {
                     var table = new System.Data.DataTable();
-                    RPADataImport.ImportDispose(
+                    RPADataExport.ImportDispose(
                         new ExcelDataReader(
                             (string)requestData.InputParams["ExcelPath"].Value,
                             (string)requestData.InputParams["Sheet"].Value,
                             (string)requestData.InputParams["range"].Value
                         ),
-                        new DataTableDataImport(table)
+                        new DataTableDataExport(table)
                     );
                     return new ResponseData(new Dictionary<string, Param>()
                     {

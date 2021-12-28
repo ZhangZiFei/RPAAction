@@ -82,6 +82,9 @@
   <PropertyGroup>
     <ApplicationIcon>RoboticArm.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Access, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -130,18 +133,18 @@
     <Compile Include="Base\ActionException.cs" />
     <Compile Include="CSRFC\CSRFC.cs" />
     <Compile Include="CSRFC\IRfcTableRPADataReader.cs" />
-    <Compile Include="Data CSO\AccessDataImport.cs" />
+    <Compile Include="Data CSO\AccessDataExport.cs" />
     <Compile Include="Data CSO\AccessDataReader.cs" />
-    <Compile Include="Data CSO\TXTDataImport.cs" />
+    <Compile Include="Data CSO\TXTDataExport.cs" />
     <Compile Include="Data CSO\DataAction.cs" />
-    <Compile Include="Data CSO\DataTableDataImport.cs" />
+    <Compile Include="Data CSO\DataTableDataExport.cs" />
     <Compile Include="Data CSO\DataTableDataReader.cs" />
-    <Compile Include="Data CSO\DbDataImport.cs" />
-    <Compile Include="Data CSO\ExcelDataImport.cs" />
+    <Compile Include="Data CSO\DbDataExport.cs" />
+    <Compile Include="Data CSO\ExcelDataExport.cs" />
     <Compile Include="Data CSO\ExcelDataReader.cs" />
-    <Compile Include="Data CSO\RPADataImport.cs" />
+    <Compile Include="Data CSO\RPADataExport.cs" />
     <Compile Include="Data CSO\RPADataReader.cs" />
-    <Compile Include="Data CSO\SQLServerDataImport.cs" />
+    <Compile Include="Data CSO\SQLServerDataExport.cs" />
     <Compile Include="Excel CSO\HighLevel_RunFunction.cs" />
     <Compile Include="Excel CSO\Internal_ExcelInfo.cs" />
     <Compile Include="Excel CSO\Process_ClearUp.cs" />
@@ -178,6 +181,7 @@
     <Compile Include="RPAAP\ResponseData.cs" />
     <Compile Include="RPAAP\RPAAPException.cs" />
     <Compile Include="RPAAP\Tool.cs" />
+    <Compile Include="Run.cs" />
     <Compile Include="Tool\Tool.cs" />
     <Compile Include="Tool\WindowEnumerator.cs" />
   </ItemGroup>

@@ -6,8 +6,16 @@ namespace RPAAction
 {
     class Program
     {
-        static void Main()
+        static void Main(params string[] p)
         {
+            if (p.Length > 0)
+            {
+                if (p[0].Equals("run"))
+                {
+                    Run.Run_(p);
+                    return;
+                }
+            }
             new RPAAction();//F();//
 
             /////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +35,7 @@ namespace RPAAction
 
         public static void Access_CSO_Test()
         {
-            RPADataImport.ImportDispose(
+            RPADataExport.ImportDispose(
                 new ExcelDataReader(
                     @"C:\Users\zhang\Desktop\a.xlsx", "d"
                 ),
@@ -40,7 +48,7 @@ namespace RPAAction
                 //    new System.Data.Odbc.OdbcConnection(@"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\Users\zhang\Desktop\a.accdb;"),
                 //    "d"
                 //)
-                new DbDataImport(
+                new DbDataExport(
                     new System.Data.OleDb.OleDbConnection(@"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\zhang\Desktop\a.accdb;"),
                     "d"
                 )

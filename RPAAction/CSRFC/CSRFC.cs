@@ -100,9 +100,9 @@ namespace RPAAction.CSRFC
         /// <param name="delimiter">分隔符,如果为空则判断文件后缀,csv为",",其余默认"\t"</param>
         public static void GetTableToTXT(string rfctable, string path, string delimiter = "")
         {
-            RPADataImport.ImportDispose(
+            RPADataExport.ImportDispose(
                 new IRfcTableRPADataReader(func.GetTable(rfctable)),
-                new TXTDataImport(path, delimiter)
+                new TXTDataExport(path, delimiter)
             );
         }
 
@@ -114,9 +114,9 @@ namespace RPAAction.CSRFC
         /// <param name="Sheet"></param>
         public static void GetTableToExcel(string rfctable, string ExcelPath, string Sheet)
         {
-            RPADataImport.ImportDispose(
+            RPADataExport.ImportDispose(
                 new IRfcTableRPADataReader(func.GetTable(rfctable)),
-                new ExcelDataImport(ExcelPath, Sheet)
+                new ExcelDataExport(ExcelPath, Sheet)
             );
         }
 
@@ -137,9 +137,9 @@ namespace RPAAction.CSRFC
             {
                 timeout = 1800;
             }
-            RPADataImport.ImportDispose(
+            RPADataExport.ImportDispose(
                 new IRfcTableRPADataReader(func.GetTable(rfctable)),
-                new SQLServerDataImport(DataSource, DataBase, user, pwd, table, appand, (int)timeout)//超时时间半小时
+                new SQLServerDataExport(DataSource, DataBase, user, pwd, table, appand, (int)timeout)//超时时间半小时
             );
         }
 

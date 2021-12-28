@@ -32,7 +32,7 @@ namespace RPAAction.Access_CSO
         {
             AccessDataReader accessDataReader = new AccessDataReader(accessPath, SQL) ;
             count = accessDataReader.Count;
-            RPADataImport.ImportDispose(accessDataReader, new DataTableDataImport(result));
+            RPADataExport.ImportDispose(accessDataReader, new DataTableDataExport(result));
         }
 
         private readonly DataTable result = new DataTable();
